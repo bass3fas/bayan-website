@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.header {
+    position: fixed;
+    top: -100px;
+    /* Hide the header initially */
+    left: 0;
+    width: 100%;
+    transition: top 0.9s ease-in-out;
+    /* Increase transition duration for smoother appearance */
+    z-index: 1000;
+    /* Ensure it is above other content */
+}
+
+.header-visible {
+    top: 0;
+    /* Show the header */
+}
+
+.main-content {
+    padding-top: 80px;
+    /* Adjust this value based on the height of your header */
+}
