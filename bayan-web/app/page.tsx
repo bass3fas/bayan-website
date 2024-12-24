@@ -1,3 +1,4 @@
+import ViolationReport from "@/components/ViolationReport"
 export default async function Page() {
   const data = await fetch('https://api.vercel.app/blog')
   const posts = await data.json()
@@ -11,6 +12,7 @@ export default async function Page() {
           <li key={post.id}>{post.title}</li>
         ))}
       </ul>
+      <ViolationReport />
     </div>
   )
 }
