@@ -63,7 +63,7 @@ export default function ViolationReport() {
   }, [isSubmitted, router]);
 
   return (
-    <section className="relative p-20" style={{ backgroundImage: "url('/assets/images/vr.jpg')" }}>
+    <section className="relative p-20" style={{ backgroundImage: "url('/assets/images/violation.jpeg')" }}>
       <div className="bg-gray-100 shadow-lg p-10 max-w-3xl mx-auto mt-10 rounded-3xl">
         {isSubmitted ? (
           <div className="text-center">
