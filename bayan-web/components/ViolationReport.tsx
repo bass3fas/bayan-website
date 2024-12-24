@@ -13,9 +13,28 @@ export default function ViolationReport() {
     setIsAnonymous(!isAnonymous);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsSubmitted(true);
+    const formData = new FormData(event.target);
+    const data = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      message: formData.get('message'),
+      file: formData.get('file'),
+      anonymous: isAnonymous,
+    };
+
+    const response = await fetch('/api/submit-report', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      setIsSubmitted(true);
+    }
   };
 
   useEffect(() => {
