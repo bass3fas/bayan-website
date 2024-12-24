@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function ViolationReport() {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [countdown, setCountdown] = useState(5);
   const router = useRouter();
 
   const handleCheckboxChange = () => {
@@ -15,10 +16,32 @@ export default function ViolationReport() {
   const handleSubmit = (event) => {
     event.preventDefault();
     setIsSubmitted(true);
-    setTimeout(() => {
-      router.push('/');
-    }, 5000);
   };
+
+  useEffect(() => {
+    if (isSubmitted) {
+      const timer = setInterval(() => {
+        setCountdown((prevCountdown) => {
+          if (prevCountdown <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prevCountdown - 1;
+        });
+      }, 1000);
+
+      const timeout = setTimeout(() => {
+        router.push('/');
+        setIsSubmitted(false);
+        setCountdown(5);
+      }, 5000);
+
+      return () => {
+        clearInterval(timer);
+        clearTimeout(timeout);
+      };
+    }
+  }, [isSubmitted, router]);
 
   return (
     <section className="relative p-20" style={{ backgroundImage: "url('/assets/images/vr.jpg')" }}>
@@ -26,7 +49,7 @@ export default function ViolationReport() {
         {isSubmitted ? (
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Thank you for your report</h2>
-            <p className="text-gray-700">You will be redirected to the home page shortly.</p>
+            <p className="text-gray-700">You will be redirected to the home page in {countdown} seconds.</p>
           </div>
         ) : (
           <>
