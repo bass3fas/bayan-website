@@ -19,7 +19,9 @@
     /* Show the header */
 }
 
-
+html {
+    scroll-behavior: smooth;
+}
 
 .background-opacity-50 {
     position: relative;

@@ -44,19 +44,19 @@ export default function Header() {
       <nav className="flex-1 flex justify-end">
         <ul className="flex justify-between w-2/3 h-full items-center">
           <li>
-            <Link href="/" className="text-[#003F63] font-regular hover:text-[#2593D1]">Home</Link>
+            <Link href="#home" className="text-[#003F63] font-regular hover:text-[#2593D1]">Home</Link>
           </li>
           <li>
-            <Link href="/" className="text-[#003F63] font-regular hover:text-[#2593D1]">About</Link>
+            <Link href="#about" className="text-[#003F63] font-regular hover:text-[#2593D1]">About</Link>
           </li>
           <li>
-            <Link href="/" className="text-[#003F63] font-regular hover:text-[#2593D1]">Products</Link>
+            <Link href="#products" className="text-[#003F63] font-regular hover:text-[#2593D1]">Products</Link>
           </li>
           <li>
-            <Link href="/" className="text-[#003F63] font-regular hover:text-[#2593D1]">Contact</Link>
+            <Link href="#contact" className="text-[#003F63] font-regular hover:text-[#2593D1]">Contact</Link>
           </li>
           <li>
-            <Link href="/" className="text-[#003F63] font-regular hover:text-[#2593D1]">Violation Report</Link>
+            <Link href="#violation-report" className="text-[#003F63] font-regular hover:text-[#2593D1]">Violation Report</Link>
           </li>
         </ul>
       </nav>
