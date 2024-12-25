@@ -50,7 +50,7 @@ export default function Header() {
             <Link href="#about" className="text-[#003F63] font-regular hover:text-[#2593D1]">About</Link>
           </li>
           <li>
-            <Link href="#products" className="text-[#003F63] font-regular hover:text-[#2593D1]">Products</Link>
+            <Link href="#partners" className="text-[#003F63] font-regular hover:text-[#2593D1]">Partners</Link>
           </li>
           <li>
             <Link href="#contact" className="text-[#003F63] font-regular hover:text-[#2593D1]">Contact</Link>
