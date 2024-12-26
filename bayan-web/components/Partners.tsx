@@ -50,9 +50,16 @@ export default function Partners() {
   }, []);
 
   return (
-    <div id="partners" className="cards-container">
-      <div className="relative w-full h-screen overflow-hidden bg-gray-100">
-        <div className="absolute flex space-x-10 animate-slide-loop">
+    <div id="partners" className="cards-container pb-6 pt-2">
+      <div className="relative w-full h-screen overflow-hidden bg-cover bg-center" style={{ backgroundImage: "url('/assets/images/partnership.jpg')" }}>
+        <div className="text-center mb-10 pt-5">
+          <h2 className="text-3xl font-bold text-white mb-6">Meet Our Trusted Partners</h2>
+          <p className="text-gray-100 text-md mx-auto max-w-md">
+            We are proud to collaborate with industry-leading partners who share our vision for excellence.
+            Together, we deliver innovative solutions and drive success in every endeavor.
+          </p>
+        </div>
+        <div className="absolute flex space-x-10 animate-slide-loop p-6">
           {partners.map((partner) => (
             <PartnerCard
               key={partner.name}
