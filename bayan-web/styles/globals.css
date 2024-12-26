@@ -92,3 +92,54 @@ body {
 .hero-content p {
     font-size: 1.5rem;
 }
+
+/* globals.css */
+@keyframes slide-loop {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+
+
+.cards-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.cards-container::before,
+.cards-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 5%;
+    /* Adjust fade width */
+    pointer-events: none;
+    z-index: 1;
+}
+
+.cards-container::before {
+    left: 0;
+    background: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+}
+
+.cards-container::after {
+    right: 0;
+    background: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+}
+
+.animate-slide-loop {
+    animation: slide-loop 20s linear infinite;
+    will-change: transform;
+    animation-play-state: running;
+}
+
+.animate-slide-loop:hover {
+    animation-play-state: paused;
+    /* Stops animation on hover */
+}

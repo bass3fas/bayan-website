@@ -1,0 +1,20 @@
+[33m3df74e9[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m partner card fade, and stops on hover
+[33m5888a01[m partner cards moving
+[33m1c9a22f[m modifying Partners
+[33med071f9[m partners card rendering successfully
+[33mbc8eafc[m About section ready
+[33m1f64463[m About section added left side only
+[33m8bf5063[m link the sections to navigate to the correct page
+[33m0a27188[m added home page
+[33m7a392cb[m violation report update
+[33m43e505d[m form submission saved to file successfully
+[33m5e8cf3f[m correct redirection handling
+[33m6c255bb[m submission message added
+[33mae7bbde[m Anonymous Report Feature added
+[33m1e6cd12[m ViolationReport component added
+[33m61758b6[m Header transition effect added
+[33m424b1c3[m added header and footer components to the layout
+[33mf0e8ba0[m tailwind config
+[33m74cf351[m app routing
+[33m59cd318[m initialize next app
+[33m62c9869[m Initial commit
