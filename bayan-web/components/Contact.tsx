@@ -111,7 +111,7 @@ export default function Contact() {
           </div>
         </form>
       </div>
-      <div className="w-1/2 bg-cover bg-center flex flex-col justify-center items-center pt-60 pl-40" style={{ backgroundImage: "url('/assets/images/contactus.jpg')" }}>
+      <div className="w-1/2 bg-no-repeat bg-center bg-cover flex flex-col justify-center items-center p-6" style={{ backgroundImage: "url('/assets/images/contactus1.jpg')" }}>
         <div className="mb-4 ">
           <FontAwesomeIcon icon={faEnvelope} className="text-[#03508C] text-2xl" />
           <a href="mailto:info@bayanmed.com" className="ml-2 text-lg text-[#03508C] hover:underline">
