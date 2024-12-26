@@ -51,7 +51,7 @@ export default function Contact() {
 
   return (
     <div className="flex h-screen pb-6">
-      <div className="w-1/2 flex flex-col justify-center p-6 bg-white rounded-lg shadow-md" id="contact">
+      <div className="w-1/2 flex flex-col justify-center p-20 bg-white rounded-lg shadow-xl m-10" id="contact">
         <h2 className="text-2xl font-bold mb-6 text-center text-[#03508C]">Contact Us</h2>
         {status && (
           <p className={`text-center mb-4 ${status.type === 'success' ? 'text-green-500' : 'text-red-500'}`}>
@@ -111,8 +111,8 @@ export default function Contact() {
           </div>
         </form>
       </div>
-      <div className="w-1/2 bg-cover bg-center flex flex-col justify-center items-center p-6" style={{ backgroundImage: "url('/assets/images/contact.jpg')" }}>
-        <div className="mb-4">
+      <div className="w-1/2 bg-cover bg-center flex flex-col justify-center items-center pt-60 pl-40" style={{ backgroundImage: "url('/assets/images/contactus.jpg')" }}>
+        <div className="mb-4 ">
           <FontAwesomeIcon icon={faEnvelope} className="text-[#03508C] text-2xl" />
           <a href="mailto:info@bayanmed.com" className="ml-2 text-lg text-[#03508C] hover:underline">
             info@bayanmed.com
