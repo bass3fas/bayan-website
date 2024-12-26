@@ -134,7 +134,7 @@ body {
 }
 
 .animate-slide-loop {
-    animation: slide-loop 20s linear infinite;
+    animation: slide-loop 50s linear infinite;
     will-change: transform;
     animation-play-state: running;
 }
