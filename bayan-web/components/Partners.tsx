@@ -34,7 +34,7 @@ export default function Partners() {
 
   return (
     <div id="partners" className="cards-container">
-      <div className="flex flex-row items-center w-full h-screen bg-gray-100">
+      <div className="flex flex-row items-center w-full h-screen">
         {partners.map((partner) => (
           <PartnerCard
             key={partner.name}
