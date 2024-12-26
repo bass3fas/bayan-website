@@ -3,55 +3,28 @@ import { useState, useEffect } from "react";
 import PartnerCard from "./Cards";
 import { PartnerProps } from "@/interfaces";
 
-const partnersData: PartnerProps[] = [
-  {
-    name: "Partner One",
-    link: "https://www.partnerone.com",
-    brief: "Partner One is a leading provider of medical equipment and supplies.",
-    logo: "/assets/logos/partnerone.png",
-  },
-  {
-    name: "Partner Two",
-    link: "https://www.partnertwo.com",
-    brief: "Partner Two specializes in innovative healthcare solutions.",
-    logo: "/assets/logos/partnertwo.png",
-  },
-  {
-    name: "Partner Three",
-    link: "https://www.partnerthree.com",
-    brief: "Partner Three offers a wide range of medical devices and services.",
-    logo: "/assets/logos/partnerthree.png",
-  },
-  {
-    name: "Partner four",
-    link: "https://www.partnerone.com",
-    brief: "Partner One is a leading provider of medical equipment and supplies.",
-    logo: "/assets/logos/partnerone.png",
-  },
-  {
-    name: "Partner five",
-    link: "https://www.partnertwo.com",
-    brief: "Partner Two specializes in innovative healthcare solutions.",
-    logo: "/assets/logos/partnertwo.png",
-  },
-  {
-    name: "Partner siz",
-    link: "https://www.partnerthree.com",
-    brief: "Partner Three offers a wide range of medical devices and services.",
-    logo: "/assets/logos/partnerthree.png",
-  },
-];
-
 export default function Partners() {
   const [partners, setPartners] = useState<PartnerProps[]>([]);
 
   useEffect(() => {
-    setPartners(partnersData);
+    // Fetch the partner data from the API
+    fetch("/api/partners")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => setPartners(data))
+      .catch((error) => console.error("Error fetching partner data:", error));
   }, []);
 
   return (
     <div id="partners" className="cards-container pb-6 pt-2">
-      <div className="relative w-full h-screen overflow-hidden bg-cover bg-center" style={{ backgroundImage: "url('/assets/images/partnership.jpg')" }}>
+      <div
+        className="relative w-full h-screen overflow-hidden bg-cover bg-center"
+        style={{ backgroundImage: "url('/assets/images/partnership.jpg')" }}
+      >
         <div className="text-center mb-10 pt-5">
           <h2 className="text-3xl font-bold text-white mb-6">Meet Our Trusted Partners</h2>
           <p className="text-gray-100 text-md mx-auto max-w-md">

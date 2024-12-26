@@ -1,7 +1,7 @@
-
+// app/api/partners/route.ts
 import { PartnerProps } from "@/interfaces";
 
-export const partners: PartnerProps[] = [
+const partnersData: PartnerProps[] = [
   {
     name: "Partner One",
     link: "https://www.partnerone.com",
@@ -21,3 +21,13 @@ export const partners: PartnerProps[] = [
     logo: "/assets/logos/partnerthree.png",
   },
 ];
+
+// Use the new Web standard API handler for Next.js 13
+export async function GET(req: Request) {
+  return new Response(JSON.stringify(partnersData), {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}
