@@ -96,19 +96,18 @@ body {
 /* globals.css */
 @keyframes slide-loop {
     0% {
-        transform: translateX(-100%);
+        transform: translateX(0);
     }
 
     100% {
-        transform: translateX(100%);
+        transform: translateX(-50%);
     }
 }
 
-
-
 .cards-container {
-    position: relative;
+    display: flex;
     overflow: hidden;
+    position: relative;
 }
 
 .cards-container::before,
@@ -130,11 +129,13 @@ body {
 
 .cards-container::after {
     right: 0;
+    left: 0;
 
 }
 
 .animate-slide-loop {
-    animation: slide-loop 50s linear infinite;
+    display: flex;
+    animation: slide-loop 30s linear infinite;
     will-change: transform;
     animation-play-state: running;
 }
@@ -142,4 +143,9 @@ body {
 .animate-slide-loop:hover {
     animation-play-state: paused;
     /* Stops animation on hover */
+}
+
+.animate-slide-loop>* {
+    flex: 0 0 auto;
+    margin-right: 10px;
 }
