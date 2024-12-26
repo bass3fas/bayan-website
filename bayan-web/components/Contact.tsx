@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEnvelope, faPhone, faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -48,7 +50,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen pb-6">
       <div className="w-1/2 flex flex-col justify-center p-6 bg-white rounded-lg shadow-md" id="contact">
         <h2 className="text-2xl font-bold mb-6 text-center text-[#03508C]">Contact Us</h2>
         {status && (
@@ -109,8 +111,30 @@ export default function Contact() {
           </div>
         </form>
       </div>
-      <div className="w-1/2 bg-gray-100">
-        {/* You can add any content or leave it empty */}
+      <div className="w-1/2 bg-cover bg-center flex flex-col justify-center items-center p-6" style={{ backgroundImage: "url('/assets/images/contact.jpg')" }}>
+        <div className="mb-4">
+          <FontAwesomeIcon icon={faEnvelope} className="text-[#03508C] text-2xl" />
+          <a href="mailto:info@bayanmed.com" className="ml-2 text-lg text-[#03508C] hover:underline">
+            info@bayanmed.com
+          </a>
+        </div>
+        <div className="mb-4">
+          <FontAwesomeIcon icon={faPhone} className="text-[#03508C] text-2xl" />
+          <a href="tel:+97142965466" className="ml-2 text-lg text-[#03508C] hover:underline">
+            +971 4 296 5466
+          </a>
+        </div>
+        <div className="mb-4">
+          <FontAwesomeIcon icon={faMapMarkerAlt} className="text-[#03508C] text-2xl" />
+          <a
+            href="https://www.google.com/maps/place/Emarat+Atrium+Building/@25.1895137,55.2563361,15z/data=!4m5!3m4!1s0x0:0xcda36166d6eb82cc!8m2!3d25.1895137!4d55.2563361"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-2 text-lg text-[#03508C] hover:underline"
+          >
+            Dubai Office
+          </a>
+        </div>
       </div>
     </div>
   );
