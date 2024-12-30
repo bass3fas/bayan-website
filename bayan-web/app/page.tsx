@@ -13,7 +13,6 @@ export default function Page() {
       <Partners />
       <Contact /> 
       <ViolationReport />
-      <FileUploader />
     </div>
   );
 }

@@ -25,7 +25,7 @@ export default function FileUploader() {
     formData.append('file', file);
 
     try {
-      await axios.post('https://httpbin.org/post', formData, {
+      const response = await axios.post('https://file.io', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -37,9 +37,14 @@ export default function FileUploader() {
         },
       });
 
-      setStatus('success');
-      setUploadProgress(100);
-    } catch {
+      if (response.data.success) {
+        console.log('File uploaded successfully:', response.data.link);
+        setStatus('success');
+      } else {
+        throw new Error('Upload failed');
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
       setStatus('error');
       setUploadProgress(0);
     }
@@ -51,9 +56,7 @@ export default function FileUploader() {
 
       {file && (
         <div className="mb-4 text-sm">
-          <p>File name: {file.name}</p>
-          <p>Size: {(file.size / 1024).toFixed(2)} KB</p>
-          <p>Type: {file.type}</p>
+          <p>{file.name} {(file.size / 1024).toFixed(2)} KB {file.type}</p>
         </div>
       )}
 
@@ -70,7 +73,7 @@ export default function FileUploader() {
       )}
 
       {file && status !== 'uploading' && (
-        <button onClick={handleFileUpload}>Upload</button>
+        <button onClick={handleFileUpload} className="w-1/5 px-2 py-2 bg-green-400 text-white text-xs rounded-md shadow-md hover:bg-green-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">Upload</button>
       )}
 
       {status === 'success' && (
