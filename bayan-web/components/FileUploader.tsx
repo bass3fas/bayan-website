@@ -1,10 +1,11 @@
 "use client";
 import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
+import FileUploaderProps from '@/interfaces';
 
 type UploadStatus = 'idle' | 'uploading' | 'success' | 'error';
 
-export default function FileUploader() {
+export default function FileUploader({ onFileUpload }: FileUploaderProps) {
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<UploadStatus>('idle');
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -38,13 +39,12 @@ export default function FileUploader() {
       });
 
       if (response.data.success) {
-        console.log('File uploaded successfully:', response.data.link);
         setStatus('success');
+        onFileUpload(response.data.link); // Pass the file link to the parent
       } else {
         throw new Error('Upload failed');
       }
     } catch (error) {
-      console.error('Upload error:', error);
       setStatus('error');
       setUploadProgress(0);
     }

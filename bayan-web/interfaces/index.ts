@@ -4,3 +4,7 @@ export interface PartnerProps {
     brief: string;
     logo: string;
 }
+
+export interface FileUploaderProps {
+    onFileUpload: (filePath: string) => void;
+}
