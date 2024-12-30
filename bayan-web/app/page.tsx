@@ -3,6 +3,7 @@ import Home from "@/components/Home";
 import About from "@/components/About";
 import Partners from "@/components/Partners";
 import Contact from "@/components/Contact";
+import FileUploader from "@/components/FileUploader";
 
 export default function Page() {
   return (
@@ -12,6 +13,7 @@ export default function Page() {
       <Partners />
       <Contact /> 
       <ViolationReport />
+      <FileUploader />
     </div>
   );
 }
