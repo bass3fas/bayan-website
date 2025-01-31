@@ -5,17 +5,8 @@ import { FileUploaderProps } from '@/interfaces';
 
 type UploadStatus = 'idle' | 'uploading' | 'success' | 'error';
 
-// Define the structure of the response data
 interface UploadResponse {
   link: string;
-}
-
-// Define a custom type for the Axios request configuration
-interface UploadConfig {
-  headers: {
-    'Content-Type': string;
-  };
-  onUploadProgress?: (progressEvent: ProgressEvent) => void;
 }
 
 export default function FileUploader({ onFileUpload }: FileUploaderProps) {
@@ -38,20 +29,19 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
     const formData = new FormData();
     formData.append('file', file);
 
-    try {
-      const config: UploadConfig = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        onUploadProgress: (progressEvent) => {
-          const progress = progressEvent.total
-            ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            : 0;
-          setUploadProgress(progress);
-        },
-      };
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: (progressEvent: ProgressEvent) => {
+        const progress = progressEvent.total
+          ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          : 0;
+        setUploadProgress(progress);
+      },
+    };
 
-      // Define the expected response type
+    try {
       const response = await axios.post<UploadResponse>('/api/upload', formData, config);
 
       if (response.data.link) {
@@ -61,7 +51,11 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
         throw new Error('Upload failed');
       }
     } catch (error) {
-      console.error('Error uploading file:', error.response?.data || error.message);
+      if (error instanceof Error && error.message) {
+        console.error('Error uploading file:', error.message);
+      } else {
+        console.error('Error uploading file:', error);
+      }
       setStatus('error');
       setUploadProgress(0);
     }
@@ -105,7 +99,7 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
       )}
 
       {status === 'error' && (
-        <p className="text-sm text-red-600">Upload failed. Please try again.</p>
+        <p className="text-sm text-red-600">Failed to upload file.</p>
       )}
     </div>
   );

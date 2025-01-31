@@ -1,23 +1,31 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import FileUploader from './FileUploader'
+import dynamic from 'next/dynamic';
+import FileUploader from './FileUploader';
 
-export default function ViolationReport() {
+const ViolationReport = () => {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [countdown, setCountdown] = useState(5);
   const [fileLink, setFileLink] = useState<string | null>(null); // Add state for the file link
-  const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleCheckboxChange = () => {
     setIsAnonymous(!isAnonymous);
   };
 
-  const handleSubmit = async (event) => {
+  const handleFileUpload = (uploadedFileLink: string) => {
+    setFileLink(uploadedFileLink);
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
+    const formData = new FormData(event.target as HTMLFormElement);
     const data = {
       name: formData.get('name'),
       email: formData.get('email'),
@@ -36,37 +44,26 @@ export default function ViolationReport() {
 
     if (response.ok) {
       setIsSubmitted(true);
-    }
-  };
-
-  useEffect(() => {
-    if (isSubmitted) {
-      const timer = setInterval(() => {
+      setCountdown(5);
+      const countdownInterval = setInterval(() => {
         setCountdown((prevCountdown) => {
-          if (prevCountdown <= 1) {
-            clearInterval(timer);
-            return 0;
+          if (prevCountdown === 1) {
+            clearInterval(countdownInterval);
+            if (typeof window !== 'undefined') {
+              window.location.href = '/';
+            }
           }
           return prevCountdown - 1;
         });
       }, 1000);
-
-      const timeout = setTimeout(() => {
-        router.push('/');
-        setIsSubmitted(false);
-        setCountdown(5);
-      }, 5000);
-
-      return () => {
-        clearInterval(timer);
-        clearTimeout(timeout);
-      };
+    } else {
+      console.error('Failed to submit report');
     }
-  }, [isSubmitted, router]);
-
-  const handleFileUpload = (fileUrl: string) => {
-    setFileLink(fileUrl); // Set the file link when the file is uploaded
   };
+
+  if (!isClient) {
+    return null; // Render nothing on the server
+  }
 
   return (
     <section className="relative p-20" id="violation-report" style={{ backgroundImage: "url('/assets/images/violation.jpeg')" }}>
@@ -133,4 +130,6 @@ export default function ViolationReport() {
       </div>
     </section>
   );
-}
+};
+
+export default dynamic(() => Promise.resolve(ViolationReport), { ssr: false });
