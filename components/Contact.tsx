@@ -51,7 +51,7 @@ export default function Contact() {
 
   return (
     <div className="flex h-screen pb-6">
-      <div className="w-1/2 flex flex-col justify-center p-20 bg-white rounded-lg shadow-xl m-10" id="contact">
+      <div className="w-full md:w-1/2 flex flex-col justify-center p-10 md:p-20 bg-white rounded-lg shadow-xl m-10" id="contact">
         <h2 className="text-2xl font-bold mb-6 text-center text-[#03508C]">Contact Us</h2>
         {status && (
           <p className={`text-center mb-4 ${status.type === 'success' ? 'text-green-500' : 'text-red-500'}`}>
@@ -59,7 +59,7 @@ export default function Contact() {
           </p>
         )}
         <form onSubmit={handleSubmit}>
-          <div className="mb-2">
+          <div className="mb-4">
             <label htmlFor="name" className="block text-gray-700 font-bold">
               Name
             </label>
@@ -74,7 +74,7 @@ export default function Contact() {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
+            <label htmlFor="email" className="block text-gray-700 font-bold">
               Email
             </label>
             <input
@@ -88,7 +88,7 @@ export default function Contact() {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="message" className="block text-gray-700 font-bold mb-2">
+            <label htmlFor="message" className="block text-gray-700 font-bold">
               Message
             </label>
             <textarea
@@ -97,11 +97,10 @@ export default function Contact() {
               value={formData.message}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#03508C]"
-              rows={5}
               required
-            ></textarea>
+            />
           </div>
-          <div className="text-center">
+          <div className="flex justify-center">
             <button
               type="submit"
               className="px-6 py-2 bg-[#03508C] text-white font-bold rounded-lg hover:bg-[#023e6b] focus:outline-none focus:ring-2 focus:ring-[#03508C]"
