@@ -38,3 +38,21 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+
+## Environment Variables:
+
+creat .env file in the root with the following info:
+
+### for report sending by email:
+```
+EMAIL_USER=
+EMAIL_PASS=
+EMAIL_RECEIVER=
+```
+### for file upload:
+create account on Cloudinary and use the given info
+```
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+```
