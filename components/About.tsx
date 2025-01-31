@@ -8,7 +8,7 @@ const About = () => {
         <section className="relative w-1/2 h-full  bg-no-repeat" style={{ backgroundImage: "url('/assets/images/about.png')" }}>
           <div className="relative z-10 flex items-center justify-center w-full h-full bg-gray-400 bg-opacity-30 p-6">
             <div className="text-center text-[#03508C] w-full p-10 mb-20">
-              <h1 className="text-3xl font-bold mb-4">About Bayan Medical</h1>
+              <h1 className="text-3xl font-bold mb-4">About Bayan Medical Company</h1>
               <p className="text-m">Bayan Medical Company is committed to advancing healthcare by delivering world-class medical devices and innovative solutions. Partnering with leading global manufacturers, we aim to enhance patient outcomes and support healthcare professionals with cutting-edge technology.</p>
             </div>
             <div id="about-icons" className="absolute bottom-20 w-full flex justify-center p-2">
