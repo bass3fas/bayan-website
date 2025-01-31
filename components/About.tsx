@@ -1,11 +1,13 @@
+import React from 'react';
 import Image from "next/image";
-export default function About() {
+
+const About = () => {
   return (
     <div className="mb-4" id="about">
       <div className="flex w-full h-screen">
         <section className="relative w-1/2 h-full  bg-no-repeat" style={{ backgroundImage: "url('/assets/images/about.png')" }}>
           <div className="relative z-10 flex items-center justify-center w-full h-full bg-gray-400 bg-opacity-30 p-6">
-            <div className="text-center text-[#03508C] w-full p-20">
+            <div className="text-center text-[#03508C] w-full p-10 mb-20">
               <h1 className="text-3xl font-bold mb-4">About Bayan Medical</h1>
               <p className="text-m">Bayan Medical Company is committed to advancing healthcare by delivering world-class medical devices and innovative solutions. Partnering with leading global manufacturers, we aim to enhance patient outcomes and support healthcare professionals with cutting-edge technology.</p>
             </div>
@@ -53,4 +55,6 @@ export default function About() {
       </div>
     </div>
   );
-}
+};
+
+export default About;

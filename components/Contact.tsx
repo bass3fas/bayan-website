@@ -51,7 +51,7 @@ export default function Contact() {
 
   return (
     <div className="flex h-screen pb-6">
-      <div className="w-full md:w-1/2 flex flex-col justify-center p-10 md:p-20 bg-white rounded-lg shadow-xl m-10" id="contact">
+      <div className="w-full md:w-1/2 flex flex-col justify-center p-10 md:p-20 bg-white rounded-lg shadow-xl " id="contact">
         <h2 className="text-2xl font-bold mb-6 text-center text-[#03508C]">Contact Us</h2>
         {status && (
           <p className={`text-center mb-4 ${status.type === 'success' ? 'text-green-500' : 'text-red-500'}`}>
@@ -59,7 +59,7 @@ export default function Contact() {
           </p>
         )}
         <form onSubmit={handleSubmit}>
-          <div className="mb-0">
+          <div className="mb-6">
             <label htmlFor="name" className="block text-gray-700 font-bold">
               Name
             </label>
