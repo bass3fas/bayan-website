@@ -5,6 +5,19 @@ import { FileUploaderProps } from '@/interfaces';
 
 type UploadStatus = 'idle' | 'uploading' | 'success' | 'error';
 
+// Define the structure of the response data
+interface UploadResponse {
+  link: string;
+}
+
+// Define a custom type for the Axios request configuration
+interface UploadConfig {
+  headers: {
+    'Content-Type': string;
+  };
+  onUploadProgress?: (progressEvent: ProgressEvent) => void;
+}
+
 export default function FileUploader({ onFileUpload }: FileUploaderProps) {
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<UploadStatus>('idle');
@@ -26,7 +39,7 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
     formData.append('file', file);
 
     try {
-      const response = await axios.post('/api/upload', formData, {
+      const config: UploadConfig = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -36,7 +49,10 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
             : 0;
           setUploadProgress(progress);
         },
-      });
+      };
+
+      // Define the expected response type
+      const response = await axios.post<UploadResponse>('/api/upload', formData, config);
 
       if (response.data.link) {
         setStatus('success');
@@ -57,7 +73,9 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
 
       {file && (
         <div className="mb-4 text-sm">
-          <p>{file.name} {(file.size / 1024).toFixed(2)} KB {file.type}</p>
+          <p>
+            {file.name} {(file.size / 1024).toFixed(2)} KB {file.type}
+          </p>
         </div>
       )}
 
@@ -74,7 +92,12 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
       )}
 
       {file && status !== 'uploading' && (
-        <button onClick={handleFileUpload} className="w-1/5 px-2 py-2 bg-green-400 text-white text-xs rounded-md shadow-md hover:bg-green-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">Upload</button>
+        <button
+          onClick={handleFileUpload}
+          className="w-1/5 px-2 py-2 bg-green-400 text-white text-xs rounded-md shadow-md hover:bg-green-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+        >
+          Upload
+        </button>
       )}
 
       {status === 'success' && (
