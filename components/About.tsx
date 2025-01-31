@@ -41,7 +41,7 @@ const About = () => {
               </div>
               <div id="quality" className="text-center text-white bg-[#2593D1] w-1/3 rounded-3xl p-6 m-2">
                 <h3 className="text-l font-bold mb-10">Quality</h3>
-                <p className="text-s m-4">Ensuring top-notch products and services for healthcare excellence</p>
+                <p className="text-s m-4">Ensuring top products and services for healthcare excellence</p>
                 <Image className="mx-auto" src="/assets/icons/badge.png" alt="innovation" width={70} height={70} />
               </div>
               <div id="commitment" className="text-center text-white bg-[#03508C] w-1/3 rounded-3xl p-6 m-2">
