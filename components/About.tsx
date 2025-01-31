@@ -11,7 +11,7 @@ const About = () => {
               <h1 className="text-3xl font-bold mb-4">About Bayan Medical</h1>
               <p className="text-m">Bayan Medical Company is committed to advancing healthcare by delivering world-class medical devices and innovative solutions. Partnering with leading global manufacturers, we aim to enhance patient outcomes and support healthcare professionals with cutting-edge technology.</p>
             </div>
-            <div id="about-icons" className="absolute bottom-20 w-full flex justify-center p-6">
+            <div id="about-icons" className="absolute bottom-20 w-full flex justify-center p-2">
               <section id="1" className="flex flex-col items-center w-1/3 justify-center">
                 <Image className="mx-10" src="/assets/icons/cup.png" alt="cup" width={70} height={55} />
                 <h2 className="text-m font-bold mt-2 text-[#DF7C19]">10+</h2>

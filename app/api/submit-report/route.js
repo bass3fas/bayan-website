@@ -23,7 +23,7 @@ export async function POST(req) {
 
     reports.push(newReport);
 
-    fs.writeFileSync(filePath, JSON.stringify(reports, null, 2));
+    //fs.writeFileSync(filePath, JSON.stringify(reports, null, 2));
 
     // Send email
     const emailSubject = 'New Violation Report Submitted';
