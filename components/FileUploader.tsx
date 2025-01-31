@@ -1,5 +1,4 @@
 "use client";
-import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
 import { FileUploaderProps } from '@/interfaces';
 
@@ -20,7 +19,7 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
     }
   }
 
-  async function handleFileUpload() {
+  function handleFileUpload() {
     if (!file) return;
 
     setStatus('uploading');
@@ -29,36 +28,43 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
     const formData = new FormData();
     formData.append('file', file);
 
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      onUploadProgress: (progressEvent: ProgressEvent) => {
-        const progress = progressEvent.total
-          ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
-          : 0;
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/upload', true);
+
+    // Set headers
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+    // Track upload progress
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const progress = Math.round((event.loaded * 100) / event.total);
         setUploadProgress(progress);
-      },
+      }
     };
 
-    try {
-      const response = await axios.post<UploadResponse>('/api/upload', formData, config);
+    // Handle response
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        try {
+          const response: UploadResponse = JSON.parse(xhr.responseText);
+          setStatus('success');
+          onFileUpload(response.link);
+        } catch (error) {
+          console.error('Error parsing response:', error);
+          setStatus('error');
+        }
+      } else {
+        console.error('Upload failed:', xhr.statusText);
+        setStatus('error');
+      }
+    };
 
-      if (response.data.link) {
-        setStatus('success');
-        onFileUpload(response.data.link); // Pass the file link to the parent
-      } else {
-        throw new Error('Upload failed');
-      }
-    } catch (error) {
-      if (error instanceof Error && error.message) {
-        console.error('Error uploading file:', error.message);
-      } else {
-        console.error('Error uploading file:', error);
-      }
+    xhr.onerror = function () {
+      console.error('Error uploading file');
       setStatus('error');
-      setUploadProgress(0);
-    }
+    };
+
+    xhr.send(formData);
   }
 
   return (
