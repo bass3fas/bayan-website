@@ -59,7 +59,7 @@ export default function Contact() {
           </p>
         )}
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+          <div className="mb-0">
             <label htmlFor="name" className="block text-gray-700 font-bold">
               Name
             </label>
