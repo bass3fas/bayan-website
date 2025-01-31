@@ -1,15 +1,8 @@
 // app/api/contact/route.ts
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { sendEmail } from '@/utils/sendEmail';
 
 export async function POST(req: Request) {
-    const filePath = path.join(process.cwd(), 'constants', 'contacts.json');
-
-    // Read existing contacts
-    const fileContents = fs.readFileSync(filePath, 'utf8');
-    const contacts = JSON.parse(fileContents);
-
     const body = await req.json();
 
     const newContact = {
@@ -19,11 +12,16 @@ export async function POST(req: Request) {
         timestamp: new Date().toISOString(),
     };
 
-    // Add the new contact to the list
-    contacts.push(newContact);
+    const emailSubject = 'New Contact Message Submitted';
+    const emailText = `A new contact message has been submitted:\n\n${JSON.stringify(newContact, null, 2)}`;
+    const emailHtml = `<p>A new contact message has been submitted:</p><pre>${JSON.stringify(newContact, null, 2)}</pre>`;
 
-    // Save the updated contacts list
-    fs.writeFileSync(filePath, JSON.stringify(contacts, null, 2));
+    try {
+        await sendEmail(process.env.EMAIL_RECEIVER, emailSubject, emailText, emailHtml);
 
-    return NextResponse.json({ message: 'Your message has been delivered successfully!, we will contact you soon' });
+        return NextResponse.json({ message: 'Your message has been delivered successfully! We will contact you soon.' });
+    } catch (error) {
+        console.error('Error sending email:', error);
+        return NextResponse.json({ error: 'Failed to send your message' }, { status: 500 });
+    }
 }
