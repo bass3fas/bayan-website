@@ -55,7 +55,7 @@ const partnersData: PartnerProps[] = [
 ];
 
 // Use the new Web standard API handler for Next.js 13
-export async function GET(req: Request) {
+export async function GET() {
   return new Response(JSON.stringify(partnersData), {
     status: 200,
     headers: {
