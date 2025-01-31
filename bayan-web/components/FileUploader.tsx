@@ -1,7 +1,7 @@
 "use client";
 import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
-import {FileUploaderProps} from '@/interfaces';
+import { FileUploaderProps } from '@/interfaces';
 
 type UploadStatus = 'idle' | 'uploading' | 'success' | 'error';
 
@@ -26,7 +26,7 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
     formData.append('file', file);
 
     try {
-      const response = await axios.post('https://file.io', formData, {
+      const response = await axios.post('/api/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -38,13 +38,14 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
         },
       });
 
-      if (response.data.success) {
+      if (response.data.link) {
         setStatus('success');
         onFileUpload(response.data.link); // Pass the file link to the parent
       } else {
         throw new Error('Upload failed');
       }
     } catch (error) {
+      console.error('Error uploading file:', error.response?.data || error.message);
       setStatus('error');
       setUploadProgress(0);
     }
