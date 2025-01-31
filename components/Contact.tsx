@@ -60,7 +60,7 @@ export default function Contact() {
         )}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
+            <label htmlFor="name" className="block text-gray-700 font-bold">
               Name
             </label>
             <input
