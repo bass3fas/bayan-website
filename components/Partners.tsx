@@ -1,17 +1,19 @@
 "use client";
+
 import { useState, useEffect } from "react";
+import { motion, useAnimation } from "framer-motion";
 import PartnerCard from "./Cards";
 import { PartnerProps } from "@/interfaces";
 
 export default function Partners() {
   const [partners, setPartners] = useState<PartnerProps[]>([]);
+  const controls = useAnimation();
 
   useEffect(() => {
-    // Fetch the partner data from the API
     fetch("/api/partners")
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         return response.json();
       })
@@ -20,29 +22,45 @@ export default function Partners() {
   }, []);
 
   return (
-    <div id="partners" className="cards-container pb-6 pt-2">
-      <div
-        className="relative w-full h-screen overflow-hidden bg-cover bg-center"
-        style={{ backgroundImage: "url('/assets/images/partnership.jpg')" }}
-      >
-        <div className="text-center mb-10 pt-5">
-          <h2 className="text-3xl font-bold text-white mb-6">Meet Our Trusted Partners</h2>
-          <p className="text-gray-100 text-md mx-auto max-w-md">
-            We are proud to collaborate with industry-leading partners who share our vision for excellence.
-            Together, we deliver innovative solutions and drive success in every endeavor.
-          </p>
-        </div>
-        <div className="absolute flex space-x-10 animate-slide-loop p-6">
-          {partners.map((partner) => (
-            <PartnerCard
-              key={partner.name}
-              name={partner.name}
-              link={partner.link}
-              brief={partner.brief}
-              logo={partner.logo}
-            />
+    <div id="partners" className="relative overflow-hidden w-full h-screen py-10 bg-gray-900">
+      <div className="text-center mb-10">
+        <h2 className="text-3xl font-bold text-white mb-6 mt-20">Meet Our Trusted Partners</h2>
+        <p className="text-gray-300 text-md mx-auto max-w-md mb-10">
+        We are proud to collaborate with industry-leading partners who share our vision for excellence. Together, we deliver innovative solutions and drive success in every endeavor.
+        </p>
+      </div>
+
+      {/* Animated Scrolling Section */}
+      <div className="relative flex items-center w-full overflow-hidden">
+        {/* Gradient Fade Effect */}
+        <div className="absolute left-0 top-0 h-full w-20 bg-gradient-to-r from-gray-900 to-transparent z-10" />
+        <div className="absolute right-0 top-0 h-full w-20 bg-gradient-to-l from-gray-900 to-transparent z-10" />
+
+        {/* Infinite Scrolling Cards */}
+        <motion.div
+          className="flex space-x-6"
+          animate={controls}
+          initial={{ x: 0 }}
+          transition={{ ease: "linear", duration: 15, repeat: Infinity }}
+          onMouseEnter={() => controls.stop()} // Stops animation on hover
+          onMouseLeave={() =>
+            controls.start({ x: "-50%", transition: { ease: "linear", duration: 10, repeat: Infinity } })
+          } // Resumes animation when mouse leaves
+        >
+          {[...Array(2)].map((_, index) => (
+            <div key={index} className="flex space-x-6">
+              {partners.map((partner) => (
+                <PartnerCard
+                  key={`${partner.name}-${index}`}
+                  name={partner.name}
+                  link={partner.link}
+                  brief={partner.brief}
+                  logo={partner.logo}
+                />
+              ))}
+            </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

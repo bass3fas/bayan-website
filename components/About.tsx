@@ -7,7 +7,7 @@ const About = () => {
       {/* Main Container */}
       <div className="flex flex-col lg:flex-row w-full min-h-screen">
         {/* Left Section (About Bayan Medical Company) */}
-        <section className="relative w-full lg:w-1/2 h-auto  bg-no-repeat bg-cover" style={{ backgroundImage: "url('/assets/images/about.png')" }}>
+        <section className="relative w-full lg:w-1/2 h-auto  bg-no-repeat bg-cover" >
           <div className="relative z-10 flex flex-col items-center justify-center w-full h-full bg-gray-400 bg-opacity-30 p-6">
             {/* About Text */}
             <div className="text-center text-[#03508C] w-full p-4 lg:p-10 lg:mb-20">
