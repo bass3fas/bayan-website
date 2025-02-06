@@ -1,5 +1,6 @@
+"use client";
 import "../styles/globals.css";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -7,15 +8,29 @@ type Props = {
   children: ReactNode;
 };
 
-export default function RootLayout({ children }: Props) {
+const Layout = ({ children }: Props) => {
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('/service-worker.js')
+          .then((registration) => {
+            console.log('Service Worker registered:', registration);
+          })
+          .catch((error) => {
+            console.log('Service Worker registration failed:', error);
+          });
+      });
+    }
+  }, []);
+
   return (
-    <html lang="en">
-    <link rel="icon" href="/assets/icons/icon.png" />
-      <body>
-        <Header />
-        <main>{children}</main>
-        <Footer />
-      </body>
-    </html>
+    <div>
+      <Header />
+      <main>{children}</main>
+      <Footer />
+    </div>
   );
-}
+};
+
+export default Layout;
