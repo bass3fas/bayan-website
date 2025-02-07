@@ -118,3 +118,13 @@ body {
 .cards-container::after {
     right: 0;
 }
+
+@media (max-width: 640px) {
+    body {
+        font-size: 14px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+}

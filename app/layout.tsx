@@ -1,8 +1,8 @@
 import "../styles/globals.css";
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import ServiceWorker from "../components/ServiceWorker"; // Import the service worker component
+import ServiceWorker from "../components/ServiceWorker";
 
 type Props = {
   children: ReactNode;
@@ -11,11 +11,18 @@ type Props = {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
-      <link rel="manifest" href="/manifest.json" />
-      <link rel="icon" href="/assets/icons/icon.png" />
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/assets/icons/icon.png" />
+      </head>
       <body>
-        <ServiceWorker /> {/* Register the Service Worker */}
-        <Header />
+        <ServiceWorker />
+        
+        {/* 🏎️ Load Header Fast */}
+        <Suspense fallback={<div className="loading-header">Loading...</div>}>
+          <Header />
+        </Suspense>
+        
         <main>{children}</main>
         <Footer />
       </body>
