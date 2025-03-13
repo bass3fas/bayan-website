@@ -23,11 +23,7 @@ export default function RootLayout({ children }: Props) {
           <Header />
         </Suspense>
         
-        <main>
-          <main className="px-4 md:px-0 space-y-10 md:space-y-20"> {/* Added spacing */}
-            {children}
-          </main>
-        </main>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>
