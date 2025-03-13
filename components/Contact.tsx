@@ -117,7 +117,7 @@ export default function Contact() {
           </div>
         </form>
       </div>
-      <div className="w-full md:w-1/2 bg-gradient-to-br from-[#03508C] to-[#2593D1] flex flex-col justify-center items-center p-4">
+      <div className="w-full md:w-1/2 bg-gradient-to-br from-[#03508C] to-[#2593D1] flex flex-col justify-center items-center p-4 md:p-20">
         <h2 className="text-2xl font-bold mb-6 text-center text-white">Contact Us</h2>
         <div className="mb-4">
           <FontAwesomeIcon icon={faEnvelope} className="text-white text-2xl" />
