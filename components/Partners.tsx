@@ -22,11 +22,11 @@ export default function Partners() {
   }, []);
 
   return (
-    <div id="partners" className="relative overflow-hidden w-full h-full py-10 bg-gray-900 mb-6">
-      <div className="text-center mb-10">
-        <h2 className="text-3xl font-bold text-white mb-2">Meet Our Trusted Partners</h2>
-        <p className="text-gray-300 text-md mx-auto max-w-md mb-10">
-        We are proud to collaborate with industry-leading partners who share our vision for excellence. Together, we deliver innovative solutions and drive success in every endeavor.
+    <div id="partners" className="relative overflow-hidden w-full min-h-screen py-10 bg-gradient-to-b from-[#03508C] to-black mb-2 mt-5 pt-20">
+      <div className="text-center mb-10 mt-10">
+        <h2 className="text-3xl font-bold text-white mb-10">Meet Our Trusted Partners</h2>
+        <p className="text-gray-300 text-md mx-auto max-w-md mb-10 mt-5">
+          We are proud to collaborate with industry-leading partners who share our vision for excellence. Together, we deliver innovative solutions and drive success in every endeavor.
         </p>
       </div>
 

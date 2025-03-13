@@ -5,13 +5,13 @@ import { faEnvelope, faPhone, faMapMarkerAlt } from "@fortawesome/free-solid-svg
 import FileUploader from "./FileUploader";
 
 export default function Contact() {
-  const [fileLink, setFileLink] = useState<string | null>(null);
+    const [fileLink, setFileLink] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
-  
+
   const handleFileUpload = (uploadedFileLink: string) => {
     setFileLink(uploadedFileLink);
   };
@@ -103,9 +103,11 @@ export default function Contact() {
               required
             />
           </div>
-          <div className="flex justify-center">
-            <h3 className="text-gray-700 font-bold mr-5">Attach your CV</h3>
+          <div className="flex flex-col sm:flex-row justify-center items-center mb-4">
+            <h3 className="text-gray-700 font-bold mr-5 mb-2 sm:mb-0">Attach your CV</h3>
             <FileUploader onFileUpload={handleFileUpload} />
+          </div>
+          <div className="flex justify-center mt-4">
             <button
               type="submit"
               className="px-6 py-2 bg-[#03508C] text-white font-bold rounded-lg hover:bg-[#023e6b] focus:outline-none focus:ring-2 focus:ring-[#03508C]"
@@ -115,26 +117,27 @@ export default function Contact() {
           </div>
         </form>
       </div>
-      <div className="w-full md:w-1/2 bg-no-repeat bg-center bg-cover flex flex-col justify-center items-center p-6 min-h-[50vh]" style={{ backgroundImage: "url('/assets/images/contactus1.jpg')" }}>
+      <div className="w-full md:w-1/2 bg-gradient-to-br from-[#03508C] to-[#2593D1] flex flex-col justify-center items-center p-6 min-h-[50vh]" >
+        <h1 className="text-white text-xl font-bold self-start mb-4 pl-20">Contact Us:</h1>
         <div className="mb-4">
-          <FontAwesomeIcon icon={faEnvelope} className="text-[#03508C] text-2xl" />
-          <a href="mailto:info@bayanmed.com" className="ml-2 text-lg text-[#03508C] hover:underline">
+          <FontAwesomeIcon icon={faEnvelope} className="text-white text-2xl" />
+          <a href="mailto:info@bayanmed.com" className="ml-2 text-lg text-white hover:underline">
             info@bayanmed.com
           </a>
         </div>
         <div className="mb-4">
-          <FontAwesomeIcon icon={faPhone} className="text-[#03508C] text-2xl" />
-          <a href="tel:+97142965466" className="ml-2 text-lg text-[#03508C] hover:underline">
+          <FontAwesomeIcon icon={faPhone} className="text-white text-2xl" />
+          <a href="tel:+97142965466" className="ml-2 text-lg text-white hover:underline">
             +971 4 296 5466
           </a>
         </div>
         <div className="mb-4">
-          <FontAwesomeIcon icon={faMapMarkerAlt} className="text-[#03508C] text-2xl" />
+          <FontAwesomeIcon icon={faMapMarkerAlt} className="text-white text-2xl" />
           <a
             href="https://www.google.com/maps/place/Emarat+Atrium+Building/@25.1895137,55.2563361,15z/data=!4m5!3m4!1s0x0:0xcda36166d6eb82cc!8m2!3d25.1895137!4d55.2563361"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-2 text-lg text-[#03508C] hover:underline"
+            className="ml-2 text-lg text-white hover:underline"
           >
             Dubai Office
           </a>
