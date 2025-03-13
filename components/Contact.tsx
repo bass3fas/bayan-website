@@ -53,7 +53,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen pb-6">
+    <div className="flex flex-col md:flex-row h-screen pt-2">
       <div className="w-full md:w-1/2 flex flex-col justify-center p-10 md:p-20 bg-white rounded-lg shadow-xl" id="contact">
         <h2 className="text-2xl font-bold mb-6 text-center text-[#03508C]">Careers</h2>
         {status && (
