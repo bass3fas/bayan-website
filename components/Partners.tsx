@@ -2,14 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
+import { Autoplay, FreeMode } from 'swiper/modules';
 import PartnerCard from "./Cards";
 import { PartnerProps } from "@/interfaces";
+
+// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/autoplay';
+import 'swiper/css/free-mode';
 
 export default function Partners() {
   const [partners, setPartners] = useState<PartnerProps[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/partners")
@@ -17,9 +21,18 @@ export default function Partners() {
         if (!response.ok) throw new Error("Network response was not ok");
         return response.json();
       })
-      .then((data) => setPartners(data))
-      .catch((error) => console.error("Error fetching partner data:", error));
+      .then((data) => {
+        setPartners(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching partner data:", error);
+        setIsLoading(false);
+      });
   }, []);
+
+  // Double the partners array for seamless infinite loop
+  const duplicatedPartners = [...partners, ...partners];
 
   return (
     <div id="partners" className="relative overflow-hidden w-full min-h-screen py-10 bg-gradient-to-b from-[#03508C] to-black mb-2 mt-5 pt-20">
@@ -35,61 +48,62 @@ export default function Partners() {
         <div className="absolute left-0 top-0 h-full w-20 bg-gradient-to-r from-gray-900 to-transparent z-20" />
         <div className="absolute right-0 top-0 h-full w-20 bg-gradient-to-l from-gray-900 to-transparent z-20" />
 
-        <Swiper
-          modules={[Autoplay]}
-          spaceBetween={30}
-          slidesPerView={'auto'}
-          centeredSlides={true}
-          loop={true}
-          autoplay={{
-            delay: 1500,
-            pauseOnMouseEnter: true,
-            disableOnInteraction: false
-          }}
-          speed={800}
-          breakpoints={{
-            320: {
-              slidesPerView: 1,
-              spaceBetween: 20
-            },
-            640: {
-              slidesPerView: 2,
-              spaceBetween: 30
-            },
-            1024: {
-              slidesPerView: 3,
-              spaceBetween: 40
-            },
-            1280: {
-              slidesPerView: 4,
-              spaceBetween: 50
-            }
-          }}
-          className="!overflow-visible"
-        >
-          {partners.map((partner, index) => (
-            <SwiperSlide key={index} className="!h-auto">
-              <PartnerCard
-                name={partner.name}
-                link={partner.link}
-                brief={partner.brief}
-                logo={partner.logo}
-              />
-            </SwiperSlide>
-          ))}
-          
-          {/* Duplicate slides for seamless loop */}
-          {partners.map((partner, index) => (
-            <SwiperSlide key={`dup-${index}`} className="!h-auto">
-              <PartnerCard
-                name={partner.name}
-                link={partner.link}
-                brief={partner.brief}
-                logo={partner.logo}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        {isLoading ? (
+          <div className="text-center text-white">Loading partners...</div>
+        ) : (
+          <Swiper
+            modules={[Autoplay, FreeMode]}
+            spaceBetween={30}
+            slidesPerView={'auto'}
+            centeredSlides={true}
+            loop={true}
+            freeMode={{
+              momentum: true,
+              momentumBounce: false,
+            }}
+            autoplay={{
+              delay: 2000,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+              waitForTransition: true,
+            }}
+            speed={1000}
+            breakpoints={{
+              320: {
+                slidesPerView: 1,
+                spaceBetween: 20
+              },
+              640: {
+                slidesPerView: 2,
+                spaceBetween: 30
+              },
+              1024: {
+                slidesPerView: 3,
+                spaceBetween: 40
+              },
+              1280: {
+                slidesPerView: 4,
+                spaceBetween: 50
+              }
+            }}
+            className="!overflow-visible"
+            // Force reinitialization when partners load
+            key={partners.length}
+          >
+            {duplicatedPartners.map((partner, index) => (
+              <SwiperSlide key={`${partner.name}-${index}`} className="!h-auto !flex !items-center !justify-center">
+                <div className="w-[300px]"> {/* Fixed width for consistent sizing */}
+                  <PartnerCard
+                    name={partner.name}
+                    link={partner.link}
+                    brief={partner.brief}
+                    logo={partner.logo}
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        )}
       </div>
     </div>
   );

@@ -128,3 +128,16 @@ body {
         padding: 10px;
     }
 }
+
+.swiper-wrapper {
+    transition-timing-function: linear !important;
+  }
+  
+  .swiper-slide {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+  
+  .swiper-slide-active {
+    opacity: 1;
+  }
