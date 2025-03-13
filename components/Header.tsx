@@ -74,7 +74,7 @@ export default function Header() {
             <Link href="#partners" className="text-[#003F63] font-regular hover:text-[#2593D1]">Partners</Link>
           </li>
           <li>
-            <Link href="#contact" className="text-[#003F63] font-regular hover:text-[#2593D1]">Contact</Link>
+            <Link href="#contact" className="text-[#003F63] font-regular hover:text-[#2593D1]">Careers</Link>
           </li>
           <li>
             <Link href="#violation-report" className="text-[#003F63] font-regular hover:text-[#2593D1]">Violation Report</Link>

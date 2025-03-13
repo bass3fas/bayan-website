@@ -1,15 +1,20 @@
 "use client";
-import { useState } from "react";
+import { useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faPhone, faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
+import FileUploader from "./FileUploader";
 
 export default function Contact() {
+  const [fileLink, setFileLink] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
-
+  
+  const handleFileUpload = (uploadedFileLink: string) => {
+    setFileLink(uploadedFileLink);
+  };
   const [status, setStatus] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -18,8 +23,6 @@ export default function Contact() {
       ...prevData,
       [name]: value,
     }));
-
-    // Clear status when user starts typing again
     setStatus(null);
   };
 
@@ -33,16 +36,16 @@ export default function Contact() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        // Include current fileLink in the submission
+        body: JSON.stringify({ ...formData, file: fileLink }),
       });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+      if (!response.ok) throw new Error('Network response was not ok');
 
       const result = await response.json();
       setStatus({ message: result.message, type: 'success' });
-      setFormData({ name: "", email: "", message: "" });
+      setFormData({ name: "", email: "", message: "" }); // Removed file reset
+      setFileLink(null); // Reset file link after submission
     } catch (error) {
       setStatus({ message: "Failed to submit the form. Please try again.", type: 'error' });
       console.error("Error submitting form:", error);
@@ -50,9 +53,9 @@ export default function Contact() {
   };
 
   return (
-    <div className="flex h-screen pb-6">
-      <div className="w-full md:w-1/2 flex flex-col justify-center p-10 md:p-20 bg-white rounded-lg shadow-xl " id="contact">
-        <h2 className="text-2xl font-bold mb-6 text-center text-[#03508C]">Contact Us</h2>
+    <div className="flex flex-col md:flex-row h-screen pb-6">
+      <div className="w-full md:w-1/2 flex flex-col justify-center p-10 md:p-20 bg-white rounded-lg shadow-xl" id="contact">
+        <h2 className="text-2xl font-bold mb-6 text-center text-[#03508C]">Careers</h2>
         {status && (
           <p className={`text-center mb-4 ${status.type === 'success' ? 'text-green-500' : 'text-red-500'}`}>
             {status.message}
@@ -101,6 +104,8 @@ export default function Contact() {
             />
           </div>
           <div className="flex justify-center">
+            <h3 className="text-gray-700 font-bold mr-5">Attach your CV</h3>
+            <FileUploader onFileUpload={handleFileUpload} />
             <button
               type="submit"
               className="px-6 py-2 bg-[#03508C] text-white font-bold rounded-lg hover:bg-[#023e6b] focus:outline-none focus:ring-2 focus:ring-[#03508C]"
@@ -110,8 +115,8 @@ export default function Contact() {
           </div>
         </form>
       </div>
-      <div className="w-1/2 bg-no-repeat bg-center bg-cover flex flex-col justify-center items-center p-6" style={{ backgroundImage: "url('/assets/images/contactus1.jpg')" }}>
-        <div className="mb-4 ">
+      <div className="w-full md:w-1/2 bg-no-repeat bg-center bg-cover flex flex-col justify-center items-center p-6 min-h-[50vh]" style={{ backgroundImage: "url('/assets/images/contactus1.jpg')" }}>
+        <div className="mb-4">
           <FontAwesomeIcon icon={faEnvelope} className="text-[#03508C] text-2xl" />
           <a href="mailto:info@bayanmed.com" className="ml-2 text-lg text-[#03508C] hover:underline">
             info@bayanmed.com

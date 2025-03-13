@@ -9,6 +9,7 @@ export async function POST(req: Request) {
         name: body.name,
         email: body.email,
         message: body.message,
+        file: body.file, // Include the file link
         timestamp: new Date().toISOString(),
     };
 

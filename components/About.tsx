@@ -58,7 +58,7 @@ const About = () => {
               </div>
               <div id="commitment" className="text-center text-white bg-[#03508C] w-full lg:w-1/3 rounded-3xl p-4 lg:p-6 m-2">
                 <h3 className="text-base lg:text-lg font-bold mb-4 lg:mb-10">Commitment</h3>
-                <p className="text-xs lg:text-sm m-2 lg:m-4">Dedicated to enhancing lives through superior solutions</p>
+                <p className="text-xs lg:text-sm m-2 lg:m-4">Dedicated to enhancing lives with superior solutions</p>
                 <Image className="mx-auto" src="/assets/icons/shake.png" alt="commitment" width={50} height={50} />
               </div>
             </div>
