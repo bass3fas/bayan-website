@@ -117,8 +117,8 @@ export default function Contact() {
           </div>
         </form>
       </div>
-      <div className="w-full md:w-1/2 bg-gradient-to-br from-[#03508C] to-[#2593D1] flex flex-col justify-center items-center p-6 min-h-[50vh]" >
-        <h1 className="text-white text-xl font-bold self-start mb-4 pl-20">Contact Us:</h1>
+      <div className="w-full md:w-1/2 bg-gradient-to-br from-[#03508C] to-[#2593D1] flex flex-col justify-center items-center p-4 min-h-[50vh]" >
+        <h1 className="text-white text-xl font-bold self-start mb-4 pl-24">Contact Us:</h1>
         <div className="mb-4">
           <FontAwesomeIcon icon={faEnvelope} className="text-white text-2xl" />
           <a href="mailto:info@bayanmed.com" className="ml-2 text-lg text-white hover:underline">

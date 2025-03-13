@@ -66,8 +66,8 @@ const ViolationReport = () => {
   }
 
   return (
-    <section className="relative p-10 mt-4" id="violation-report" style={{ backgroundImage: "url('/assets/images/violation.jpeg')" }}>
-      <div className="bg-gray-100 shadow-lg p-10 max-w-3xl mx-auto mt-10 rounded-3xl">
+    <section className="relative p-5 mt-5" id="violation-report" style={{ backgroundImage: "url('/assets/images/violation.jpeg')" }}>
+      <div className="bg-gray-100 shadow-lg p-8 max-w-3xl mx-auto mt-5 rounded-3xl">
         {isSubmitted ? (
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Thank you for your report</h2>
@@ -77,7 +77,12 @@ const ViolationReport = () => {
           <>
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Violation Report</h2>
             <p className="text-gray-700 mb-4">
-              At Bayan Medical, we are dedicated to maintaining the highest standards of integrity across all our business practices and interactions...
+            At Bayan Medical, we are dedicated to maintaining the highest standards of integrity across all our business practices 
+            and interactions. We believe that ethical behavior and transparency are the cornerstones of our success and reputation. 
+            Our commitment to integrity means that we expect all employees, partners, and stakeholders to adhere to the highest ethical 
+            standards and to report any violations or concerns without fear of retaliation. 
+            Your report is crucial in helping us uphold these values 
+            and ensure that we continue to operate with honesty and integrity in everything we do.
             </p>
 
             <form className="space-y-4" onSubmit={handleSubmit}>
