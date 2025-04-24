@@ -3,7 +3,7 @@ export default function Home() {
     <div className="mb-4" id="home">
       <section className="hero-section">
         <video className="hero-video" autoPlay loop muted>
-          <source src="/assets/videos/Home.mp4" type="video/mp4" />
+          <source src="/assets/videos/logo_bayan.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         {/*
