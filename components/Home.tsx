@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <div className="mb-4" id="home">
+    <div className="mb-0" id="home">
       <section className="hero-section">
         <video className="hero-video" autoPlay loop muted>
           <source src="/assets/videos/logo_bayan.mp4" type="video/mp4" />
