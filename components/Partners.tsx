@@ -35,26 +35,29 @@ export default function Partners() {
   const duplicatedPartners = [...partners, ...partners];
 
   return (
-    <div id="partners" className="relative overflow-hidden w-full min-h-screen py-10 bg-gradient-to-b from-[#03508C] to-black mb-2 mt-5 pt-20">
+    <div id="partners" className="relative overflow-hidden w-full min-h-screen py-10 bg-sky-100 pt-20">
       <div className="text-center mb-10 mt-10">
-        <h2 className="text-3xl font-bold text-white mb-10">Meet Our Trusted Partners</h2>
-        <p className="text-gray-300 text-md mx-auto max-w-md mb-10 mt-5">
-          We are proud to collaborate with industry-leading partners who share our vision for excellence. Together, we deliver innovative solutions and drive success in every endeavor.
+        <h3 className="text-sm font-light text-sky-900 mb-2">OUR PARTNERS</h3>
+        <h2 className="text-3xl lg:text-4xl font-bold text-sky-900 mb-4">
+          Global Partnerships Driving Medical Excellence
+        </h2>
+        <p className="text-gray-700 text-sm lg:text-base mx-auto max-w-md mb-10">
+          Solutions Provider in the UAE, partnering with world-class suppliers to offer cutting-edge medical devices and services.
         </p>
       </div>
 
       <div className="relative w-full px-4">
         {/* Gradient Fade Effect */}
-        <div className="absolute left-0 top-0 h-full w-20 bg-gradient-to-r from-gray-900 to-transparent z-20" />
-        <div className="absolute right-0 top-0 h-full w-20 bg-gradient-to-l from-gray-900 to-transparent z-20" />
+        <div className="absolute left-0 top-0 h-full w-20 bg-gradient-to-r from-sky-200 to-transparent z-20" />
+        <div className="absolute right-0 top-0 h-full w-20 bg-gradient-to-l from-sky-200 to-transparent z-20" />
 
         {isLoading ? (
-          <div className="text-center text-white">Loading partners...</div>
+          <div className="text-center text-sky-900">Loading partners...</div>
         ) : (
           <Swiper
             modules={[Autoplay, FreeMode]}
             spaceBetween={30}
-            slidesPerView={'auto'}
+            slidesPerView={"auto"}
             centeredSlides={true}
             loop={true}
             freeMode={{
@@ -62,7 +65,7 @@ export default function Partners() {
               momentumBounce: false,
             }}
             autoplay={{
-              delay: 2000,
+              delay: 1000,
               disableOnInteraction: false,
               pauseOnMouseEnter: true,
               waitForTransition: true,
@@ -71,27 +74,36 @@ export default function Partners() {
             breakpoints={{
               320: {
                 slidesPerView: 1,
-                spaceBetween: 20
+                spaceBetween: 20,
               },
               640: {
                 slidesPerView: 2,
-                spaceBetween: 30
+                spaceBetween: 30,
               },
               1024: {
                 slidesPerView: 3,
-                spaceBetween: 40
+                spaceBetween: 40,
               },
               1280: {
                 slidesPerView: 4,
-                spaceBetween: 50
-              }
+                spaceBetween: 50,
+              },
             }}
             className="!overflow-visible"
             // Force reinitialization when partners load
             key={partners.length}
+            onSwiper={(swiper) => {
+              // Pause autoplay when hovering over a card
+              const swiperContainer = swiper.el;
+              swiperContainer.addEventListener("mouseenter", () => swiper.autoplay.stop());
+              swiperContainer.addEventListener("mouseleave", () => swiper.autoplay.start());
+            }}
           >
             {duplicatedPartners.map((partner, index) => (
-              <SwiperSlide key={`${partner.name}-${index}`} className="!h-auto !flex !items-center !justify-center">
+              <SwiperSlide
+                key={`${partner.name}-${index}`}
+                className="!h-auto !flex !items-center !justify-center"
+              >
                 <div className="w-[300px]"> {/* Fixed width for consistent sizing */}
                   <PartnerCard
                     name={partner.name}
