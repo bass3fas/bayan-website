@@ -1,21 +1,25 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, FreeMode } from 'swiper/modules';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, FreeMode } from "swiper/modules";
 import PartnerCard from "./Cards";
 import { PartnerProps } from "@/interfaces";
 
 // Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/autoplay';
-import 'swiper/css/free-mode';
+import "swiper/css";
+import "swiper/css/autoplay";
+import "swiper/css/free-mode";
 
 export default function Partners() {
   const [partners, setPartners] = useState<PartnerProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isClient, setIsClient] = useState(false); // Track if the component is mounted on the client
 
   useEffect(() => {
+    // Ensure Swiper is only rendered on the client
+    setIsClient(true);
+
     fetch("/api/partners")
       .then((response) => {
         if (!response.ok) throw new Error("Network response was not ok");
@@ -54,67 +58,72 @@ export default function Partners() {
         {isLoading ? (
           <div className="text-center text-sky-900">Loading partners...</div>
         ) : (
-          <Swiper
-            modules={[Autoplay, FreeMode]}
-            spaceBetween={30}
-            slidesPerView={"auto"}
-            centeredSlides={true}
-            loop={true}
-            freeMode={{
-              momentum: true,
-              momentumBounce: false,
-            }}
-            autoplay={{
-              delay: 1000,
-              disableOnInteraction: false,
-              pauseOnMouseEnter: true,
-              waitForTransition: true,
-            }}
-            speed={1000}
-            breakpoints={{
-              320: {
-                slidesPerView: 1,
-                spaceBetween: 20,
-              },
-              640: {
-                slidesPerView: 2,
-                spaceBetween: 30,
-              },
-              1024: {
-                slidesPerView: 3,
-                spaceBetween: 40,
-              },
-              1280: {
-                slidesPerView: 4,
-                spaceBetween: 50,
-              },
-            }}
-            className="!overflow-visible"
-            // Force reinitialization when partners load
-            key={partners.length}
-            onSwiper={(swiper) => {
-              // Pause autoplay when hovering over a card
-              const swiperContainer = swiper.el;
-              swiperContainer.addEventListener("mouseenter", () => swiper.autoplay.stop());
-              swiperContainer.addEventListener("mouseleave", () => swiper.autoplay.start());
-            }}
-          >
-            {duplicatedPartners.map((partner, index) => (
-              <SwiperSlide
-                key={`${partner.name}-${index}`}
-                className="!h-auto !flex !items-center !justify-center"
-              >
-                <div className="w-[300px]"> {/* Fixed width for consistent sizing */}
-                  <PartnerCard
-                    name={partner.name}
-                    link={partner.link}
-                    brief={partner.brief}
-                    logo={partner.logo}
-                  />
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          isClient && ( // Render Swiper only on the client
+            <Swiper
+              modules={[Autoplay, FreeMode]}
+              spaceBetween={30}
+              slidesPerView={"auto"}
+              centeredSlides={true}
+              loop={true}
+              freeMode={{
+                momentum: true,
+                momentumBounce: false,
+              }}
+              autoplay={{
+                delay: 1000,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+                waitForTransition: true,
+              }}
+              speed={1000}
+              breakpoints={{
+                320: {
+                  slidesPerView: 1,
+                  spaceBetween: 20,
+                },
+                640: {
+                  slidesPerView: 2,
+                  spaceBetween: 30,
+                },
+                1024: {
+                  slidesPerView: 3,
+                  spaceBetween: 40,
+                },
+                1280: {
+                  slidesPerView: 4,
+                  spaceBetween: 50,
+                },
+              }}
+              className="!overflow-visible"
+              key={partners.length}
+              onSwiper={(swiper) => {
+                // Pause autoplay when hovering over a card
+                const swiperContainer = swiper.el;
+                swiperContainer.addEventListener("mouseenter", () => {
+                  if (swiper.autoplay) swiper.autoplay.stop();
+                });
+                swiperContainer.addEventListener("mouseleave", () => {
+                  if (swiper.autoplay) swiper.autoplay.start();
+                });
+              }}
+            >
+              {duplicatedPartners.map((partner, index) => (
+                <SwiperSlide
+                  key={`${partner.name}-${index}`}
+                  className="!h-auto !flex !items-center !justify-center"
+                >
+                  <div className="w-[300px]"> {/* Fixed width for consistent sizing */}
+                    <PartnerCard
+                      name={partner.name}
+                      link={partner.link}
+                      brief={partner.brief}
+                      logo={partner.logo}
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )
         )}
       </div>
     </div>

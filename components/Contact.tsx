@@ -1,11 +1,11 @@
 "use client";
-import { useState} from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faPhone, faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import FileUploader from "./FileUploader";
 
 export default function Contact() {
-    const [fileLink, setFileLink] = useState<string | null>(null);
+  const [fileLink, setFileLink] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -15,7 +15,7 @@ export default function Contact() {
   const handleFileUpload = (uploadedFileLink: string) => {
     setFileLink(uploadedFileLink);
   };
-  const [status, setStatus] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [status, setStatus] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -36,111 +36,117 @@ export default function Contact() {
         headers: {
           "Content-Type": "application/json",
         },
-        // Include current fileLink in the submission
         body: JSON.stringify({ ...formData, file: fileLink }),
       });
 
-      if (!response.ok) throw new Error('Network response was not ok');
+      if (!response.ok) throw new Error("Network response was not ok");
 
       const result = await response.json();
-      setStatus({ message: result.message, type: 'success' });
-      setFormData({ name: "", email: "", message: "" }); // Removed file reset
-      setFileLink(null); // Reset file link after submission
+      setStatus({ message: result.message, type: "success" });
+      setFormData({ name: "", email: "", message: "" });
+      setFileLink(null);
     } catch (error) {
-      setStatus({ message: "Failed to submit the form. Please try again.", type: 'error' });
+      setStatus({ message: "Failed to submit the form. Please try again.", type: "error" });
       console.error("Error submitting form:", error);
     }
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen pt-2">
-      <div className="w-full md:w-1/2 flex flex-col justify-center p-10 md:p-20 bg-white rounded-lg shadow-xl" id="contact">
-        <h2 className="text-2xl font-bold mb-6 text-center text-[#03508C]">Careers</h2>
+    <div
+      className="flex flex-col md:flex-row h-screen"
+      id="contact"
+      style={{
+        backgroundImage: "url('/assets/images/contact-bayan.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="w-full md:w-1/2 flex flex-col justify-center p-10 md:p-20">
+        <h2 className="text-2xl font-bold mb-6 text-center text-white">Careers</h2>
         {status && (
-          <p className={`text-center mb-4 ${status.type === 'success' ? 'text-green-500' : 'text-red-500'}`}>
+          <p className={`text-center mb-4 ${status.type === "success" ? "text-green-500" : "text-red-500"}`}>
             {status.message}
           </p>
         )}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-6">
-            <label htmlFor="name" className="block text-gray-700 font-bold">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#03508C]"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 font-bold">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#03508C]"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="message" className="block text-gray-700 font-bold">
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#03508C]"
-              required
-            />
-          </div>
-          <div className="flex flex-col sm:flex-row justify-center items-center mb-4">
-            <h3 className="text-gray-700 font-bold mr-5 mb-2 sm:mb-0">Attach your CV</h3>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Input Fields */}
+          {["name", "email", "message"].map((field) => (
+            <div key={field} className="relative">
+              <input
+                type={field === "email" ? "email" : field === "message" ? "text" : "text"}
+                id={field}
+                name={field}
+                value={formData[field as keyof typeof formData]}
+                onChange={handleChange}
+                placeholder=" "
+                className="peer w-full px-3 py-2 border-b-2 border-blue-400 bg-transparent text-white focus:outline-none focus:ring-0 focus:border-white placeholder-transparent"
+                required
+              />
+              <label
+                htmlFor={field}
+                className="absolute left-3 top-2 text-blue-400 text-l transition-all duration-300 transform -translate-y-3 scale-75 origin-left peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-white peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:text-blue-400"
+              >
+                {field.charAt(0).toUpperCase() + field.slice(1)}
+              </label>
+            </div>
+          ))}
+
+          {/* Attach CV */}
+          <div className="flex flex-col items-start mb-4 px-3">
+            <h3 className="text-white font-bold mb-4">Attach your CV</h3>
             <FileUploader onFileUpload={handleFileUpload} />
           </div>
+
+          {/* Submit Button */}
           <div className="flex justify-center mt-4">
             <button
               type="submit"
-              className="px-6 py-2 bg-[#03508C] text-white font-bold rounded-lg hover:bg-[#023e6b] focus:outline-none focus:ring-2 focus:ring-[#03508C]"
+              className="px-6 py-2 bg-white text-[#03508C] font-bold rounded-full hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-[#03508C]"
             >
               Submit
             </button>
           </div>
         </form>
       </div>
-      <div className="w-full md:w-1/2 bg-gradient-to-br from-[#03508C] to-[#2593D1] flex flex-col justify-center items-center p-4 md:p-20">
-        <h2 className="text-2xl font-bold mb-6 text-center text-white">Contact Us</h2>
-        <div className="mb-4">
-          <FontAwesomeIcon icon={faEnvelope} className="text-white text-2xl" />
-          <a href="mailto:info@bayanmed.com" className="ml-2 text-lg text-white hover:underline">
-            info@bayanmed.com
-          </a>
+      <div className="w-full md:w-1/2 flex flex-col justify-center items-start p-10 md:p-20 text-white">
+        {/* Icon and "GET IN TOUCH" */}
+        <div className="flex items-center mb-6">
+          <img src="/assets/icons/atom.png" alt="Atom Icon" className="w-10 h-10 mr-4" />
+          <h3 className="text-lg font-light">GET IN TOUCH</h3>
         </div>
-        <div className="mb-4">
-          <FontAwesomeIcon icon={faPhone} className="text-white text-2xl" />
-          <a href="tel:+97142965466" className="ml-2 text-lg text-white hover:underline">
-            +971 4 296 5466
-          </a>
-        </div>
-        <div className="mb-4">
-          <FontAwesomeIcon icon={faMapMarkerAlt} className="text-white text-2xl" />
-          <a
-            href="https://www.google.com/maps/place/Emarat+Atrium+Building/@25.1895137,55.2563361,15z/data=!4m5!3m4!1s0x0:0xcda36166d6eb82cc!8m2!3d25.1895137!4d55.2563361"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-2 text-lg text-white hover:underline"
-          >
-            Dubai Office
-          </a>
+
+        {/* Main Heading */}
+        <h2 className="text-3xl lg:text-4xl font-bold mb-8">
+          Seamless Medical Distribution Starts Here, <br />
+          Join the Future of Healthcare Today.
+        </h2>
+
+        {/* Location Section */}
+        <div className="mb-8">
+          <div className="flex items-center mb-4">
+            <FontAwesomeIcon icon={faMapMarkerAlt} className="text-white text-2xl mr-4" />
+            <h4 className="text-lg font-light">OUR OFFICE</h4>
+          </div>
+
+          {/* First Location */}
+          <div className="flex border-l-2 border-sky-300 items-start mb-6 ml-6">
+            <div className="mr-4 h-full"></div>
+            <div>
+              <p>Emarat Atrium Building</p>
+              <p>info@bayanmed.com</p>
+              <p>+971 4 296 5466</p>
+            </div>
+          </div>
+
+          {/* Second Location */}
+          <div className="flex border-l-2 border-sky-300 items-start mb-6 ml-6">
+            <div className="mr-4 h-full"></div>
+            <div>
+              <p>Ras Al Khor Industrial 3</p>
+              <p>info@bayanmed.com</p>
+              <p>+971 4 346 8772</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
