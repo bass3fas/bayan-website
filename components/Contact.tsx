@@ -54,7 +54,7 @@ export default function Contact() {
 
   return (
     <div
-      className="flex flex-col md:flex-row h-screen"
+      className="flex flex-col md:flex-row h-auto"
       id="contact"
       style={{
         backgroundImage: "url('/assets/images/contact-bayan.png')",
@@ -62,6 +62,7 @@ export default function Contact() {
         backgroundPosition: "center",
       }}
     >
+      {/* Left Side */}
       <div className="w-full md:w-1/2 flex flex-col justify-center p-10 md:p-20">
         {status ? (
           status.type === "success" ? (
@@ -73,7 +74,7 @@ export default function Contact() {
           )
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6 p-20 mb-20">
-            {/* Name and Email Fields */}
+            {/* Form Fields */}
             {["name", "email"].map((field) => (
               <div key={field} className="relative mb-6">
                 <input
@@ -94,7 +95,7 @@ export default function Contact() {
                 </label>
               </div>
             ))}
-  
+
             {/* Message Field */}
             <div className="relative mb-6">
               <textarea
@@ -118,13 +119,13 @@ export default function Contact() {
                 {formData.message.length}/500
               </div>
             </div>
-  
+
             {/* Attach CV */}
             <div className="flex flex-col items-center px-3 mb-8">
               <h3 className="text-white font-bold mb-8">Attach your CV</h3>
               <FileUploader onFileUpload={handleFileUpload} />
             </div>
-  
+
             {/* Submit Button */}
             <div className="flex justify-center mt-6">
               <button
@@ -138,7 +139,7 @@ export default function Contact() {
         )}
       </div>
 
-      {/* Right Side with Image and Contact Info */}
+      {/* Right Side */}
       <div className="w-full md:w-1/2 flex flex-col justify-center items-start p-10 md:p-20 text-white">
         {/* Icon and "GET IN TOUCH" */}
         <div className="flex items-center mb-6">
