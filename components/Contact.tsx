@@ -63,7 +63,7 @@ export default function Contact() {
       }}
     >
       {/* Left Side */}
-      <div className="w-full md:w-1/2 flex flex-col justify-center p-10 md:p-20">
+      <div className="w-full md:w-1/2 flex flex-col justify-center mt-20 p-10 md:p-20">
         {status ? (
           status.type === "success" ? (
             <div className="text-center p-20">
