@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faPhone, faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
+import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import FileUploader from "./FileUploader";
+import Image from "next/image";
 
 export default function Contact() {
   const [fileLink, setFileLink] = useState<string | null>(null);
@@ -62,16 +63,16 @@ export default function Contact() {
       }}
     >
       <div className="w-full md:w-1/2 flex flex-col justify-center p-10 md:p-20">
-        <h2 className="text-2xl font-bold mb-6 text-center text-white">Careers</h2>
+        {/* <h2 className="text-2xl font-bold mb-6 text-center text-white">Careers</h2> */}
         {status && (
           <p className={`text-center mb-4 ${status.type === "success" ? "text-green-500" : "text-red-500"}`}>
             {status.message}
           </p>
         )}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 p-10 mb-20">
           {/* Input Fields */}
           {["name", "email", "message"].map((field) => (
-            <div key={field} className="relative">
+            <div key={field} className="relative mb-4">
               <input
                 type={field === "email" ? "email" : field === "message" ? "text" : "text"}
                 id={field}
@@ -111,7 +112,13 @@ export default function Contact() {
       <div className="w-full md:w-1/2 flex flex-col justify-center items-start p-10 md:p-20 text-white">
         {/* Icon and "GET IN TOUCH" */}
         <div className="flex items-center mb-6">
-          <img src="/assets/icons/atom.png" alt="Atom Icon" className="w-10 h-10 mr-4" />
+          <Image
+            src="/assets/icons/atom.png"
+            alt="Atom Icon"
+            width={40}
+            height={40}
+            className="mr-4"
+          />
           <h3 className="text-lg font-light">GET IN TOUCH</h3>
         </div>
 
