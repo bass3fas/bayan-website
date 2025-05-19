@@ -92,8 +92,8 @@ export default function Contact() {
           ))}
 
           {/* Attach CV */}
-          <div className="flex flex-col items-start mb-4 px-3">
-            <h3 className="text-white font-bold mb-4">Attach your CV</h3>
+          <div className="flex flex-col items-start px-3">
+            <h3 className="text-white font-bold mb-8">Attach your CV</h3>
             <FileUploader onFileUpload={handleFileUpload} />
           </div>
 
@@ -132,8 +132,24 @@ export default function Contact() {
           <div className="flex border-l-2 border-sky-300 items-start mb-6 ml-6">
             <div className="mr-4 h-full"></div>
             <div>
-              <p>Emarat Atrium Building</p>
-              <p>info@bayanmed.com</p>
+              <p>
+                <a
+                  href="https://maps.app.goo.gl/kBGqbtJTVSRyxgVV6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:underline"
+                >
+                  Emarat Atrium Building
+                </a>
+              </p>
+              <p>
+                <a
+                  href="mailto:info@bayanmed.com"
+                  className="text-white hover:underline"
+                >
+                  info@bayanmed.com
+                </a>
+              </p>
               <p>+971 4 296 5466</p>
             </div>
           </div>
@@ -143,7 +159,14 @@ export default function Contact() {
             <div className="mr-4 h-full"></div>
             <div>
               <p>Ras Al Khor Industrial 3</p>
-              <p>info@bayanmed.com</p>
+              <p>
+                <a
+                  href="mailto:info@bayanmed.com"
+                  className="text-white hover:underline"
+                >
+                  info@bayanmed.com
+                </a>
+              </p>
               <p>+971 4 346 8772</p>
             </div>
           </div>
