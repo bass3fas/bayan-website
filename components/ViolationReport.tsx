@@ -66,7 +66,7 @@ const ViolationReport = () => {
   }
 
   return (
-    <section className="relative p-5 mt-5" id="violation-report" style={{ backgroundImage: "url('/assets/images/violation.jpeg')" }}>
+    <section className="relative p-5" id="violation-report" style={{ backgroundImage: "url('/assets/images/violation.jpeg')" }}>
       <div className="bg-gray-100 shadow-lg p-8 max-w-3xl mx-auto mt-5 rounded-3xl">
         {isSubmitted ? (
           <div className="text-center">

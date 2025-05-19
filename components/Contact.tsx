@@ -69,10 +69,10 @@ export default function Contact() {
             {status.message}
           </p>
         )}
-        <form onSubmit={handleSubmit} className="space-y-6 p-10 mb-20">
+        <form onSubmit={handleSubmit} className="space-y-6 p-20 mb-20">
           {/* Input Fields */}
           {["name", "email", "message"].map((field) => (
-            <div key={field} className="relative mb-4">
+            <div key={field} className="relative mb-6">
               <input
                 type={field === "email" ? "email" : field === "message" ? "text" : "text"}
                 id={field}
@@ -93,13 +93,13 @@ export default function Contact() {
           ))}
 
           {/* Attach CV */}
-          <div className="flex flex-col items-start px-3">
+          <div className="flex flex-col items-center px-3 mb-8">
             <h3 className="text-white font-bold mb-8">Attach your CV</h3>
             <FileUploader onFileUpload={handleFileUpload} />
           </div>
 
           {/* Submit Button */}
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center mt-6">
             <button
               type="submit"
               className="px-6 py-2 bg-white text-[#03508C] font-bold rounded-full hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-[#03508C]"
