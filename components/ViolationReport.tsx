@@ -77,12 +77,11 @@ const ViolationReport = () => {
           <>
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Violation Report</h2>
             <p className="text-gray-700 mb-4">
-            At Bayan Medical, we are dedicated to maintaining the highest standards of integrity across all our business practices 
-            and interactions. We believe that ethical behavior and transparency are the cornerstones of our success and reputation. 
-            Our commitment to integrity means that we expect all employees, partners, and stakeholders to adhere to the highest ethical 
-            standards and to report any violations or concerns without fear of retaliation. 
-            Your report is crucial in helping us uphold these values 
-            and ensure that we continue to operate with honesty and integrity in everything we do.
+              At Bayan Medical, we uphold the highest standards of integrity in all our practices, 
+              valuing ethical behavior and transparency as key to our success. 
+              We encourage employees, partners, 
+              and stakeholders to report any concerns without fear of retaliation, 
+              helping us maintain honesty and integrity in all we do.
             </p>
 
             <form className="space-y-4" onSubmit={handleSubmit}>
