@@ -3,6 +3,7 @@ import { ReactNode, Suspense } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ServiceWorker from "../components/ServiceWorker";
+import { Analytics } from "@vercel/analytics/next";
 
 type Props = {
   children: ReactNode;
@@ -25,6 +26,9 @@ export default function RootLayout({ children }: Props) {
         
         <main>{children}</main>
         <Footer />
+        
+        {/* Vercel Analytics */}
+        <Analytics />
       </body>
     </html>
   );
