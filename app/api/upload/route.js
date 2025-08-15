@@ -21,7 +21,7 @@ export async function POST(req) {
 
         const response = await new Promise((resolve, reject) => {
             cloudinary.uploader
-                .upload_stream({ resource_type: 'auto' }, (error, result) => {
+                .upload_stream({ resource_type: 'auto', upload_preset: 'bayan_public_uploads', type: 'upload' }, (error, result) => {
                     if (error) {
                         reject(error);
                     } else {
@@ -30,8 +30,9 @@ export async function POST(req) {
                 })
                 .end(buffer);
         });
-
+        console.log('File uploaded successfully:', response.secure_url);
         return NextResponse.json({ link: response.secure_url });
+        
     } catch (error) {
         console.error('Error uploading file:', error);
         return NextResponse.json(

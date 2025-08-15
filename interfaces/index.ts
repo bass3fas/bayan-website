@@ -6,5 +6,9 @@ export interface PartnerProps {
 }
 
 export interface FileUploaderProps {
-    onFileUpload: (filePath: string) => void;
+  onFileUpload: (fileLink: string) => void;
+  onFileStatusChange?: (status: {
+    hasUnuploadedFile: boolean;
+    isUploading: boolean;
+  }) => void;
 }

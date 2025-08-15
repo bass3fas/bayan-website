@@ -12,11 +12,18 @@ export default function Contact() {
     email: "",
     message: "",
   });
+  const [status, setStatus] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [hasUnuploadedFile, setHasUnuploadedFile] = useState(false);
+  const [isFileUploading, setIsFileUploading] = useState(false);
 
   const handleFileUpload = (uploadedFileLink: string) => {
     setFileLink(uploadedFileLink);
   };
-  const [status, setStatus] = useState<{ message: string; type: "success" | "error" } | null>(null);
+
+  const handleFileStatusChange = (status: { hasUnuploadedFile: boolean; isUploading: boolean }) => {
+    setHasUnuploadedFile(status.hasUnuploadedFile);
+    setIsFileUploading(status.isUploading);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -30,6 +37,24 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus(null);
+
+    // Check if there's an unuploaded file
+    if (hasUnuploadedFile) {
+      setStatus({
+        message: "Please upload the selected file before submitting the form.",
+        type: "error",
+      });
+      return;
+    }
+
+    // Check if file is currently uploading
+    if (isFileUploading) {
+      setStatus({
+        message: "Please wait for the file upload to complete before submitting.",
+        type: "error",
+      });
+      return;
+    }
 
     try {
       const response = await fetch("/api/contact", {
@@ -123,16 +148,24 @@ export default function Contact() {
             {/* Attach CV */}
             <div className="flex flex-col items-center px-3 mb-8">
               <h3 className="text-white font-bold mb-8">Attach your CV</h3>
-              <FileUploader onFileUpload={handleFileUpload} />
+              <FileUploader
+                onFileUpload={handleFileUpload}
+                onFileStatusChange={handleFileStatusChange}
+              />
             </div>
 
             {/* Submit Button */}
             <div className="flex justify-center mt-6">
               <button
                 type="submit"
-                className="px-6 py-2 bg-white text-[#03508C] font-bold rounded-full hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-[#03508C]"
+                disabled={hasUnuploadedFile || isFileUploading}
+                className={`px-6 py-2 font-bold rounded-full focus:outline-none focus:ring-2 focus:ring-[#03508C] ${
+                  hasUnuploadedFile || isFileUploading
+                    ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+                    : "bg-white text-[#03508C] hover:bg-blue-400"
+                }`}
               >
-                Submit
+                {isFileUploading ? "Uploading..." : "Submit"}
               </button>
             </div>
           </form>

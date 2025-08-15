@@ -1,5 +1,5 @@
 "use client";
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, useEffect } from 'react';
 import { FileUploaderProps } from '@/interfaces';
 
 type UploadStatus = 'idle' | 'uploading' | 'success' | 'error';
@@ -8,14 +8,25 @@ interface UploadResponse {
   link: string;
 }
 
-export default function FileUploader({ onFileUpload }: FileUploaderProps) {
+export default function FileUploader({ onFileUpload, onFileStatusChange }: FileUploaderProps) {
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<UploadStatus>('idle');
   const [uploadProgress, setUploadProgress] = useState(0);
 
+  // Notify parent about file status changes
+  useEffect(() => {
+    if (onFileStatusChange) {
+      onFileStatusChange({
+        hasUnuploadedFile: file !== null && status !== 'success',
+        isUploading: status === 'uploading'
+      });
+    }
+  }, [file, status, onFileStatusChange]);
+
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       setFile(e.target.files[0]);
+      setStatus('idle'); // Reset status when new file is selected
     }
   }
 
@@ -31,10 +42,8 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/upload', true);
 
-    // Set headers
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
-    // Track upload progress
     xhr.upload.onprogress = (event) => {
       if (event.lengthComputable) {
         const progress = Math.round((event.loaded * 100) / event.total);
@@ -42,7 +51,6 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
       }
     };
 
-    // Handle response
     xhr.onload = function () {
       if (xhr.status === 200) {
         try {
@@ -101,7 +109,14 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
         </div>
       )}
 
-      {/* Upload Progress Section - Now properly included */}
+      {/* Warning message when file is selected but not uploaded */}
+      {file && status === 'idle' && (
+        <div className="p-3 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded">
+          <p className="text-sm">⚠️ Please upload the selected file before submitting the form.</p>
+        </div>
+      )}
+
+      {/* Upload Progress Section */}
       {status === 'uploading' && (
         <div className="space-y-2">
           <div className="h-2.5 w-full rounded-full bg-gray-200">
@@ -117,21 +132,21 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
       )}
 
       {/* Upload button */}
-      {file && status !== 'uploading' && (
+      {file && status !== 'uploading' && status !== 'success' && (
         <button
           onClick={handleFileUpload}
-          className="w-full px-4 py-2 bg-blue-300 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="w-full px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           Upload File
         </button>
       )}
 
       {status === 'success' && (
-        <p className="text-sm text-green-300">File uploaded successfully!</p>
+        <p className="text-sm text-green-500">✅ File uploaded successfully!</p>
       )}
 
       {status === 'error' && (
-        <p className="text-sm text-red-300">Failed to upload file.</p>
+        <p className="text-sm text-red-300">❌ Failed to upload file.</p>
       )}
     </div>
   );
