@@ -12,6 +12,7 @@ export default function FileUploader({ onFileUpload, onFileStatusChange }: FileU
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<UploadStatus>('idle');
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Notify parent about file status changes
   useEffect(() => {
@@ -25,8 +26,27 @@ export default function FileUploader({ onFileUpload, onFileStatusChange }: FileU
 
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
-      setFile(e.target.files[0]);
-      setStatus('idle'); // Reset status when new file is selected
+      const selectedFile = e.target.files[0];
+
+      // ✅ Allowed file types
+      const allowedTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+        'image/gif',
+        'application/pdf'
+      ];
+
+      if (!allowedTypes.includes(selectedFile.type)) {
+        setFile(null);
+        setStatus('error');
+        setErrorMessage('❌ File type not supported. Only JPG, PNG, WEBP, GIF, and PDF are allowed.');
+        return;
+      }
+
+      setFile(selectedFile);
+      setStatus('idle');
+      setErrorMessage(null);
     }
   }
 
@@ -35,6 +55,7 @@ export default function FileUploader({ onFileUpload, onFileStatusChange }: FileU
 
     setStatus('uploading');
     setUploadProgress(0);
+    setErrorMessage(null);
 
     const formData = new FormData();
     formData.append('file', file);
@@ -60,16 +81,24 @@ export default function FileUploader({ onFileUpload, onFileStatusChange }: FileU
         } catch (error) {
           console.error('Error parsing response:', error);
           setStatus('error');
+          setErrorMessage('❌ Failed to parse upload response.');
         }
       } else {
         console.error('Upload failed:', xhr.statusText);
         setStatus('error');
+        try {
+          const response = JSON.parse(xhr.responseText);
+          setErrorMessage(`❌ ${response.error}`);
+        } catch {
+          setErrorMessage('❌ Failed to upload file.');
+        }
       }
     };
 
     xhr.onerror = function () {
       console.error('Error uploading file');
       setStatus('error');
+      setErrorMessage('❌ Error uploading file.');
     };
 
     xhr.send(formData);
@@ -145,8 +174,8 @@ export default function FileUploader({ onFileUpload, onFileStatusChange }: FileU
         <p className="text-sm text-green-500">✅ File uploaded successfully!</p>
       )}
 
-      {status === 'error' && (
-        <p className="text-sm text-red-300">❌ Failed to upload file.</p>
+      {status === 'error' && errorMessage && (
+        <p className="text-sm text-red-300">{errorMessage}</p>
       )}
     </div>
   );
