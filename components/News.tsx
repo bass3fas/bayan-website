@@ -44,32 +44,36 @@ export default function News() {
     }
   };
 
+  // Check URL parameters on load and when news items change
+  useEffect(() => {
+    const newsId = searchParams?.get('id');
+    if (newsId && newsItems.length > 0) {
+      const news = newsItems.find(item => item.id === parseInt(newsId));
+      if (news) {
+        handleNewsClick(news);
+      }
+    }
+  }, [searchParams, newsItems]);
+
   // Fetch news on component mount and category change
   useEffect(() => {
     fetchNews(selectedCategory);
   }, [selectedCategory]);
 
-  // Check URL parameters on load
-  useEffect(() => {
-    const newsId = searchParams.get('id');
-    if (newsId && newsItems.length > 0) {
-      const news = newsItems.find(item => item.id === parseInt(newsId));
-      if (news) {
-        setSelectedNews(news);
-        setIsModalOpen(true);
-      }
-    }
-  }, [searchParams, newsItems]);
-
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
+    // Clear any open modals when changing category
+    if (isModalOpen) {
+      closeModal();
+    }
   };
 
   const handleNewsClick = (news: NewsItem) => {
     setSelectedNews(news);
     setIsModalOpen(true);
     // Update URL without page reload
-    router.push(`/news?id=${news.id}`, { scroll: false });
+    const newUrl = `/news?id=${news.id}`;
+    window.history.pushState({}, '', newUrl);
     document.body.style.overflow = 'hidden';
   };
 
@@ -77,7 +81,7 @@ export default function News() {
     setSelectedNews(null);
     setIsModalOpen(false);
     // Remove ID from URL
-    router.push('/news', { scroll: false });
+    window.history.pushState({}, '', '/news');
     document.body.style.overflow = 'unset';
   };
 
@@ -117,8 +121,8 @@ export default function News() {
       <section className="min-h-screen bg-gray-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-10">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2 mt-2">
               News & Updates
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
