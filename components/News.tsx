@@ -1,12 +1,11 @@
 "use client";
 import { NewsItem } from '@/interfaces';
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import NewsCard from './NewsCard';
 import NewsModal from './NewsModal';
 
 export default function News() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
