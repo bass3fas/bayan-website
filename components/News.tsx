@@ -105,7 +105,7 @@ export default function News() {
               News & Updates
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Stay informed with the latest developments, partnerships, and achievements at Bayan Medical.
+              Stay informed with the latest developments, partnerships, and achievements.
             </p>
           </div>
 
