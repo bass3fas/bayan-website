@@ -1,10 +1,13 @@
 "use client";
 import { NewsItem } from '@/interfaces';
 import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import NewsCard from './NewsCard';
 import NewsModal from './NewsModal';
 
 export default function News() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
@@ -46,6 +49,18 @@ export default function News() {
     fetchNews(selectedCategory);
   }, [selectedCategory]);
 
+  // Check URL parameters on load
+  useEffect(() => {
+    const newsId = searchParams.get('id');
+    if (newsId && newsItems.length > 0) {
+      const news = newsItems.find(item => item.id === parseInt(newsId));
+      if (news) {
+        setSelectedNews(news);
+        setIsModalOpen(true);
+      }
+    }
+  }, [searchParams, newsItems]);
+
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
   };
@@ -53,14 +68,16 @@ export default function News() {
   const handleNewsClick = (news: NewsItem) => {
     setSelectedNews(news);
     setIsModalOpen(true);
-    // Prevent body scroll when modal is open
+    // Update URL without page reload
+    router.push(`/news?id=${news.id}`, { scroll: false });
     document.body.style.overflow = 'hidden';
   };
 
   const closeModal = () => {
     setSelectedNews(null);
     setIsModalOpen(false);
-    // Restore body scroll
+    // Remove ID from URL
+    router.push('/news', { scroll: false });
     document.body.style.overflow = 'unset';
   };
 
