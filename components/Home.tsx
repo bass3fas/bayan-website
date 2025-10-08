@@ -1,3 +1,5 @@
+import NewsBar from './NewsBar';
+
 export default function Home() {
   return (
     <div className="mb-0" id="home">
@@ -17,16 +19,28 @@ export default function Home() {
             <h3 className="text-lg lg:text-xl text-sky-200 font-bold mb-6">
               Transforming healthcare with state-of-the-art Medical Solutions
             </h3>
-            {/*<p className="text-sm lg:text-base text-white mb-8">
-              Trusted by professionals,<br /> committed to patient care
-            </p>*/}
-            <a
-              href="#contact"
-              className="px-6 py-3 text-sky-900 bg-white font-bold rounded-lg hover:bg-sky-200 transition duration-300"
-            >
-              Get in Touch
-            </a>
+            
+            {/* Button Container */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a
+                href="#contact"
+                className="px-6 py-3 text-sky-900 bg-white font-bold rounded-lg hover:bg-sky-200 transition duration-300"
+              >
+                Get in Touch
+              </a>
+              <a
+                href="/news"
+                className="px-6 py-3 text-white bg-sky-900 font-bold rounded-lg hover:bg-sky-800 transition duration-300 "
+              >
+                Latest News
+              </a>
+            </div>
           </div>
+        </div>
+
+        {/* Sliding News Bar - Positioned at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 z-30 mb-20">
+          <NewsBar />
         </div>
       </section>
     </div>
