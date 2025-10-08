@@ -12,3 +12,24 @@ export interface FileUploaderProps {
     isUploading: boolean;
   }) => void;
 }
+
+
+export interface NewsDetailProps {
+  params: { slug: string };
+}
+
+export interface NewsItem {
+  id: number;
+  title: string;
+  excerpt: string;
+  content: string;
+  image: string;
+  date: string;
+  category: 'announcement' | 'update' | 'partnership' | 'achievement';
+}
+
+export interface NewsModalProps {
+  news: NewsItem | null;
+  isOpen: boolean;
+  onClose: () => void;
+}
