@@ -14,9 +14,6 @@ export interface FileUploaderProps {
 }
 
 
-export interface NewsDetailProps {
-  params: Promise<{ id: string }>; // Changed from slug to id, and made it a Promise
-}
 
 export interface NewsItem {
   id: number;
