@@ -14,12 +14,12 @@ export default function Home() {
             <h1 className="text-4xl lg:text-6xl font-bold text-white mb-8">
               Bayan Medical Company
             </h1>
-            <h3 className="text-lg lg:text-xl text-sky-200 font-bold mb-2">
+            <h3 className="text-lg lg:text-xl text-sky-200 font-bold mb-6">
               Transforming healthcare with state-of-the-art Medical Solutions
             </h3>
-            <p className="text-sm lg:text-base text-white mb-8">
+            {/*<p className="text-sm lg:text-base text-white mb-8">
               Trusted by professionals,<br /> committed to patient care
-            </p>
+            </p>*/}
             <a
               href="#contact"
               className="px-6 py-3 text-sky-900 bg-white font-bold rounded-lg hover:bg-sky-200 transition duration-300"

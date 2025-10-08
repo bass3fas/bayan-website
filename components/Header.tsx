@@ -76,7 +76,7 @@ export default function Header() {
 
       {/* Nav (for desktop) */}
       <nav className="hidden sm:flex flex-1 justify-end">
-        <ul className="flex justify-between w-2/3 h-full items-center">
+        <ul className="flex justify-between w-3/4 h-full items-center">
           <li>
             <Link href="#home" className="text-[#003F63] font-regular hover:text-[#2593D1]">Home</Link>
           </li>
@@ -90,7 +90,7 @@ export default function Header() {
             <Link href="#contact" className="text-[#003F63] font-regular hover:text-[#2593D1]">Careers</Link>
           </li>
           <li>
-            <Link href="#violation-report" className="text-[#003F63] font-regular hover:text-[#2593D1]">Violation Report</Link>
+            <Link href="#violation-report" className="text-[#003F63] font-regular hover:text-[#2593D1]">Violation Rep.</Link>
           </li>
         </ul>
       </nav>
