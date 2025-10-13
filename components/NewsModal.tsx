@@ -20,12 +20,47 @@ export default function NewsModal({ news, isOpen, onClose }: NewsModalProps) {
     }
   };
 
+  // Function to format plain text content
+  const formatContent = (content: string) => {
+    return content.split('\n').map((line, index) => {
+      // Skip empty lines
+      if (line.trim() === '') {
+        return <br key={index} />;
+      }
+      
+      // Handle bullet points
+      if (line.trim().startsWith('•')) {
+        return (
+          <li key={index} className="ml-4 mb-1">
+            {line.trim().substring(1).trim()}
+          </li>
+        );
+      }
+      
+      // Handle section headers (lines that end with colon)
+      if (line.trim().endsWith(':') && line.trim().length < 100) {
+        return (
+          <h3 key={index} className="text-xl font-semibold text-gray-900 mt-6 mb-3">
+            {line.trim()}
+          </h3>
+        );
+      }
+      
+      // Regular paragraphs
+      return (
+        <p key={index} className="mb-4 leading-relaxed">
+          {line.trim()}
+        </p>
+      );
+    });
+  };
+
   return (
     <div 
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 "
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white rounded-lg max-w-4xl max-h-[82vh] overflow-y-auto relative mt-6 ">
+      <div className="bg-white rounded-lg max-w-4xl max-h-[82vh] overflow-y-auto relative mt-6">
         {/* Header Image */}
         <div className="relative">
           <Image
@@ -68,7 +103,6 @@ export default function NewsModal({ news, isOpen, onClose }: NewsModalProps) {
                 day: 'numeric'
               })}
             </span>
-            
           </div>
           
           {/* Title */}
@@ -83,11 +117,10 @@ export default function NewsModal({ news, isOpen, onClose }: NewsModalProps) {
             </p>
           </div>
           
-          {/* Content */}
-          <div 
-            className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: news.content }}
-          />
+          {/* Formatted Content */}
+          <div className="prose prose-lg max-w-none text-gray-700">
+            {formatContent(news.content)}
+          </div>
           
           {/* Footer Actions */}
           <div className="mt-8 pt-6 border-t border-gray-200 flex justify-between items-center">
@@ -110,7 +143,6 @@ export default function NewsModal({ news, isOpen, onClose }: NewsModalProps) {
                       url: window.location.href
                     });
                   } else {
-                    // Fallback: copy to clipboard
                     navigator.clipboard.writeText(window.location.href);
                     alert('Link copied to clipboard!');
                   }
