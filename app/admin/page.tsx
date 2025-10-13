@@ -20,7 +20,7 @@ export default function AdminLogin() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (username === 'admin' && password === 'admin') {
+    if (username === 'bass3fas' && password === '2581994') {
       if (typeof window !== 'undefined') {
         localStorage.setItem('isAdmin', 'true');
       }

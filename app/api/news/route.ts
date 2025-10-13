@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
     const newsItem = {
       ...body,
       id: newId,
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split('T')[0], // Always current date
       createdAt: new Date(),
       updatedAt: new Date()
     };
