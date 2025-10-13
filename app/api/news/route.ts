@@ -4,7 +4,7 @@ import { MongoClient } from 'mongodb'; // Remove ObjectId import
 // -----------------
 // MongoDB Connection
 // -----------------
-const uri = 'mongodb+srv://bass3fas:fskj2581994@bayan.b4m5ord.mongodb.net/?retryWrites=true&w=majority&appName=Bayan';
+const uri = process.env.MONGODB_URI;
 let cachedClient: MongoClient | null = null;
 
 async function connectToDatabase() {
