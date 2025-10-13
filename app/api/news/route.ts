@@ -4,10 +4,13 @@ import { MongoClient, ObjectId } from 'mongodb';
 // -----------------
 // MongoDB Connection
 // -----------------
-const uri = process.env.MONGODB_URI || 'mongodb+srv://bass3fas:fskj2581994@bayan.b4m5ord.mongodb.net/';
+const uri = process.env.MONGODB_URI;
 let cachedClient: MongoClient | null = null;
 
 async function connectToDatabase() {
+  if (!uri) {
+    throw new Error('MONGODB_URI environment variable is not set');
+  }
   if (cachedClient) {
     return cachedClient;
   }

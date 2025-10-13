@@ -17,16 +17,30 @@ export default function AdminLogin() {
     }
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (username === 'bass3fas' && password === '2581994') {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('isAdmin', 'true');
+    setError('');
+
+    try {
+      const response = await fetch('/api/admin/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (response.ok) {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('isAdmin', 'true');
+        }
+        router.push('/admin/dashboard');
+      } else {
+        const data = await response.json();
+        setError(data.error || 'Invalid credentials');
       }
-      router.push('/admin/dashboard');
-    } else {
-      setError('Invalid credentials');
+    } catch (error) {
+      setError('Login failed. Please try again.');
     }
   };
 
