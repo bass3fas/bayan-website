@@ -36,7 +36,7 @@ export default function AdminDashboard() {
     }
     
     fetchNews();
-  }, []);
+  }, [router]); // Add router to dependency array
 
   const fetchNews = async () => {
     try {

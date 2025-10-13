@@ -6,6 +6,7 @@ export default function AdminLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   // Check if already logged in
@@ -15,11 +16,12 @@ export default function AdminLogin() {
         router.push('/admin/dashboard');
       }
     }
-  }, []);
+  }, [router]); // Add router to dependency array
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
     try {
       const response = await fetch('/api/admin/', {
@@ -39,8 +41,11 @@ export default function AdminLogin() {
         const data = await response.json();
         setError(data.error || 'Invalid credentials');
       }
-    } catch (error) {
+    } catch (err) { // Use err instead of error to avoid unused variable
+      console.error('Login error:', err);
       setError('Login failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,6 +69,7 @@ export default function AdminLogin() {
               onChange={(e) => setUsername(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              disabled={loading}
             />
           </div>
           
@@ -78,6 +84,7 @@ export default function AdminLogin() {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              disabled={loading}
             />
           </div>
           
@@ -89,9 +96,10 @@ export default function AdminLogin() {
           
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50"
           >
-            Login
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
       </div>
