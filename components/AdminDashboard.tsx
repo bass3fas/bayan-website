@@ -7,8 +7,7 @@ import PartnersControl from '@/components/PartnersControl';
 
 export default function AdminDashboardPage({ 
   title = "Admin Dashboard", 
-  subtitle = "Manage your content",
-  children 
+  subtitle = "Manage your content" 
 }: AdminDashboardProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('news');

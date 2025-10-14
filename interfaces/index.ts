@@ -37,3 +37,11 @@ export interface AdminDashboardProps {
   subtitle?: string;
   children: React.ReactNode;
 }
+
+export interface PartnerProps {
+  
+  name: string;
+  link: string;
+  brief: string;
+  logo: string;
+}
