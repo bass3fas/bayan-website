@@ -1,8 +1,9 @@
-export interface PartnerProps {
-    name: string;
-    link: string;
-    brief: string;
-    logo: string;
+export interface Partner {
+  id: number;
+  name: string;
+  link: string;
+  brief: string;
+  logo: string;
 }
 
 export interface FileUploaderProps {
@@ -29,4 +30,10 @@ export interface NewsModalProps {
   news: NewsItem | null;
   isOpen: boolean;
   onClose: () => void;
+}
+
+export interface AdminDashboardProps {
+  title?: string;
+  subtitle?: string;
+  children: React.ReactNode;
 }

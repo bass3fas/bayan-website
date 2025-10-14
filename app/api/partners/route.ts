@@ -1,65 +1,177 @@
 // app/api/partners/route.ts
-import { PartnerProps } from "@/interfaces";
+import { NextRequest, NextResponse } from 'next/server';
+import { MongoClient } from 'mongodb';
 
-const partnersData: PartnerProps[] = [
-  {
-    name: "Medtronic",
-    link: "https://www.medtronic.com/us-en/index.html",
-    brief: "Medtronic is the world’s largest medical technology company, offering an unprecedented breadth and depth of innovative therapies to fulfill a mission of alleviating pain, restoring health and extending life.",
-    logo: "/assets/logos/medtronic.png",
-  },
-  {
-    name: "Aesculap",
-    link: "https://www.aesculap.com",
-    brief: "Aesculap – Partner for Surgery A strong part of B. Braun for more than 40 years. As a product brand in the B. Braun portfolio, AESCULAP offers solutions for surgical and interventional core processes.",
-    logo: "/assets/logos/aesculap.png",
-  },
-  {
-    name: "BBraun",
-    link: "https://www.bbraun.com/en.html",
-    brief: "B. Braun is one of the world’s leading providers and manufacturers of healthcare solutions today. Every service that B. Braun provides incorporates the entirety of our knowledge and skills, the company’s deep understanding.",
-    logo: "/assets/logos/bbraun.png",
-  },
-  {
-    name: "GE Healthcare",
-    link: "https://www.bkmedical.com/",
-    brief: "For more than 40 years, BK Ultrasound solutions have played a central role in procedure-driven markets that include urology, surgery and point-of-care. With award-winning systems and unique transducer designs",
-    logo: "/assets/logos/ge-bk.png",
-  },
-  {
-    name: "Medartis",
-    link: "https://www.medartis.com/",
-    brief: "Medartis is a leading innovator in osteosynthesis implants for cranio-maxillofacial, upper and lower extremities. Their high-quality products significantly contribute to the restoration of bone fractures, accelerating rehabilitation and improving patient outcomes. ",
-    logo: "/assets/logos/medartis.png",
-  },
-  {
-    name: "Gesiter",
-    link: "http://www.geister.com/",
-    brief: "Geister, manufacturer and system suppliers for Surgical world with the highest quality instruments with best “ GERMAN WORKMANSHIP”. They develop technical innovations for the medical professionals for evolving patient friendly conventional and MIS procedures.",
-    logo: "/assets/logos/geister.png",
-  },
-  {
-    name: "Sophysa",
-    link: "http://www.sophysa.com/",
-    brief: "Sophysa offers a unique solution for the joint continuous measurements of intracranial pressure and temperature. With the Pressio® System, Sophysa offers a complete solution for the joint measurement of intracranial pressure (ICP) and temperature (ICT).",
-    logo: "/assets/logos/sophysa.png",
-  },
-  {
-    name: "Artivion",
-    link: "https://artivion.com/",
-    brief: "Artivion produces and markets medical devices for aortic and peripheral vascular diseases. Jotec portfolio encompasses conventional vascular grafts and interventional implants for vascular, cardiac surgery and radiology",
-    logo: "/assets/logos/artivion.png",
-  },
+// -----------------
+// MongoDB Connection
+// -----------------
+const uri = process.env.MONGODB_URI;
+let cachedClient: MongoClient | null = null;
 
+async function connectToDatabase() {
+  console.log('Attempting to connect to MongoDB for partners...');
+  
+  if (!uri) {
+    throw new Error('MongoDB URI is not defined');
+  }
+  
+  if (cachedClient) {
+    console.log('Using cached MongoDB connection');
+    return cachedClient;
+  }
 
-];
+  try {
+    console.log('Creating new MongoDB connection...');
+    const client = new MongoClient(uri, {
+      serverSelectionTimeoutMS: 5000,
+    });
+    
+    await client.connect();
+    console.log('MongoDB connected successfully for partners');
+    
+    await client.db('bayanmed').admin().ping();
+    console.log('MongoDB ping successful');
+    
+    cachedClient = client;
+    return client;
+  } catch (error) {
+    console.error('MongoDB connection failed:', error);
+    throw error;
+  }
+}
 
-// Use the new Web standard API handler for Next.js 13
-export async function GET() {
-  return new Response(JSON.stringify(partnersData), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+// -----------------
+// API Handlers
+// -----------------
+
+// GET - Fetch partners
+export async function GET(req: NextRequest) {
+  console.log('GET /api/partners called');
+  
+  try {
+    const client = await connectToDatabase();
+    const db = client.db('bayanmed');
+    const collection = db.collection('partners');
+
+    console.log('Fetching partners from database...');
+    
+    const url = new URL(req.url);
+    const id = url.searchParams.get('id');
+
+    // Get specific partner by ID
+    if (id) {
+      console.log('Fetching partner by ID:', id);
+      const partner = await collection.findOne({ id: parseInt(id) });
+      if (!partner) {
+        return NextResponse.json({ error: 'Partner not found' }, { status: 404 });
+      }
+      return NextResponse.json(partner);
+    }
+
+    // Fetch all partners and sort by name
+    const partners = await collection.find({}).sort({ name: 1 }).toArray();
+    console.log('Found partners:', partners.length);
+
+    return NextResponse.json(partners);
+  } catch (error) {
+    console.error('Error in GET /api/partners:', error);
+    return NextResponse.json({ 
+      error: 'Database error', 
+      message: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
+  }
+}
+
+// POST - Add new partner
+export async function POST(req: NextRequest) {
+  try {
+    const client = await connectToDatabase();
+    const db = client.db('bayanmed');
+    const collection = db.collection('partners');
+
+    const body = await req.json();
+    
+    // Get the highest ID and increment
+    const lastPartner = await collection.findOne({}, { sort: { id: -1 } });
+    const newId = lastPartner ? lastPartner.id + 1 : 1;
+
+    const partner = {
+      ...body,
+      id: newId,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    const result = await collection.insertOne(partner);
+    
+    return NextResponse.json({ 
+      success: true, 
+      partner: { ...partner, _id: result.insertedId } 
+    }, { status: 201 });
+  } catch (error) {
+    console.error('Error creating partner:', error);
+    return NextResponse.json({ error: 'Failed to create partner' }, { status: 500 });
+  }
+}
+
+// PUT - Update partner
+export async function PUT(req: NextRequest) {
+  try {
+    const client = await connectToDatabase();
+    const db = client.db('bayanmed');
+    const collection = db.collection('partners');
+
+    const body = await req.json();
+    const { id, ...updateData } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: 'Partner ID is required' }, { status: 400 });
+    }
+
+    const result = await collection.updateOne(
+      { id: parseInt(id) },
+      { 
+        $set: { 
+          ...updateData, 
+          updatedAt: new Date() 
+        } 
+      }
+    );
+
+    if (result.matchedCount === 0) {
+      return NextResponse.json({ error: 'Partner not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, message: 'Partner updated successfully' });
+  } catch (error) {
+    console.error('Error updating partner:', error);
+    return NextResponse.json({ error: 'Failed to update partner' }, { status: 500 });
+  }
+}
+
+// DELETE - Delete partner
+export async function DELETE(req: NextRequest) {
+  try {
+    const client = await connectToDatabase();
+    const db = client.db('bayanmed');
+    const collection = db.collection('partners');
+
+    const url = new URL(req.url);
+    const id = url.searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ error: 'Partner ID is required' }, { status: 400 });
+    }
+
+    const result = await collection.deleteOne({ id: parseInt(id) });
+
+    if (result.deletedCount === 0) {
+      return NextResponse.json({ error: 'Partner not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, message: 'Partner deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting partner:', error);
+    return NextResponse.json({ error: 'Failed to delete partner' }, { status: 500 });
+  }
 }
