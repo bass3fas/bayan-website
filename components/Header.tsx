@@ -87,7 +87,7 @@ export default function Header() {
             <Link href="/#partners" className="text-[#003F63] font-regular hover:text-[#2593D1]">Partners</Link>
           </li>
           <li>
-            <Link href="/#contact" className="text-[#003F63] font-regular hover:text-[#2593D1]">Careers</Link>
+            <Link href="/#contact" className="text-[#003F63] font-regular hover:text-[#2593D1]">Contact</Link>
           </li>
           <li>
             <Link href="/#violation-report" className="text-[#003F63] font-regular hover:text-[#2593D1]">Violation Rep.</Link>
@@ -109,7 +109,7 @@ export default function Header() {
               <Link href="#partners" onClick={closeMobileMenu} className="text-[#003F63] font-regular hover:text-[#2593D1] block py-2">Partners</Link>
             </li>
             <li className="w-full text-center py-2">
-              <Link href="#contact" onClick={closeMobileMenu} className="text-[#003F63] font-regular hover:text-[#2593D1] block py-2">Careers</Link>
+              <Link href="#contact" onClick={closeMobileMenu} className="text-[#003F63] font-regular hover:text-[#2593D1] block py-2">Contact</Link>
             </li>
             <li className="w-full text-center py-2">
               <Link href="#violation-report" onClick={closeMobileMenu} className="text-[#003F63] font-regular hover:text-[#2593D1] block py-2">Violation Report</Link>
