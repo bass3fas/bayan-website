@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
+import FileUploader from '@/components/FileUploader';
 
 interface NewsItem {
   id: number;
@@ -20,9 +21,11 @@ export default function NewsControl() {
     title: '',
     excerpt: '',
     content: '',
-    image: '/assets/images/news/1.png',
+    image: '',
     category: 'announcement'
   });
+  const [imageUploading, setImageUploading] = useState(false);
+  const [hasUnuploadedImage, setHasUnuploadedImage] = useState(false);
 
   useEffect(() => {
     fetchNews();
@@ -38,6 +41,15 @@ export default function NewsControl() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleImageUpload = (uploadedImageLink: string) => {
+    setFormData(prev => ({ ...prev, image: uploadedImageLink }));
+  };
+
+  const handleImageStatusChange = (status: { hasUnuploadedFile: boolean; isUploading: boolean }) => {
+    setHasUnuploadedImage(status.hasUnuploadedFile);
+    setImageUploading(status.isUploading);
   };
 
   const deleteNews = async (id: number) => {
@@ -65,7 +77,7 @@ export default function NewsControl() {
       title: '',
       excerpt: '',
       content: '',
-      image: '/assets/images/news/1.png',
+      image: '',
       category: 'announcement'
     });
     setShowModal(true);
@@ -86,13 +98,23 @@ export default function NewsControl() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (hasUnuploadedImage) {
+      alert('Please upload the selected image before submitting.');
+      return;
+    }
+
+    if (imageUploading) {
+      alert('Please wait for the image upload to complete.');
+      return;
+    }
+
     try {
       if (editingNews) {
         // Update existing news
         const response = await fetch('/api/news', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...formData, id: editingNews.id })
+          body: JSON.stringify({ ...formData, id: editingNews.id, date: editingNews.date })
         });
         
         if (response.ok) {
@@ -156,14 +178,23 @@ export default function NewsControl() {
             {newsItems.map((item) => (
               <div key={item.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                 <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <h3 className="font-medium text-gray-900 text-lg">{item.title}</h3>
-                    <p className="text-sm text-gray-500 mt-1">
-                      Category: <span className="capitalize">{item.category}</span> • Date: {item.date}
-                    </p>
-                    <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-                      {item.excerpt}
-                    </p>
+                  <div className="flex space-x-4">
+                    {item.image && (
+                      <img 
+                        src={item.image} 
+                        alt={item.title}
+                        className="w-20 h-20 object-cover rounded"
+                      />
+                    )}
+                    <div className="flex-1">
+                      <h3 className="font-medium text-gray-900 text-lg">{item.title}</h3>
+                      <p className="text-sm text-gray-500 mt-1">
+                        Category: <span className="capitalize">{item.category}</span> • Date: {item.date}
+                      </p>
+                      <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                        {item.excerpt}
+                      </p>
+                    </div>
                   </div>
                   <div className="ml-4 flex space-x-2">
                     <button 
@@ -189,55 +220,107 @@ export default function NewsControl() {
       {/* Modal for Add/Edit */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <h3 className="text-xl font-bold mb-4">
                 {editingNews ? 'Edit News Item' : 'Add New News Item'}
               </h3>
               
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Title
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.title}
-                    onChange={(e) => setFormData({...formData, title: e.target.value})}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Left Column */}
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Title
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.title}
+                        onChange={(e) => setFormData({...formData, title: e.target.value})}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Category
+                      </label>
+                      <select
+                        value={formData.category}
+                        onChange={(e) => setFormData({...formData, category: e.target.value})}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="announcement">Announcement</option>
+                        <option value="update">Update</option>
+                        <option value="partnership">Partnership</option>
+                        <option value="achievement">Achievement</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Excerpt
+                      </label>
+                      <textarea
+                        value={formData.excerpt}
+                        onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={3}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Right Column - Image Upload */}
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        News Image
+                      </label>
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                        <FileUploader
+                          onFileUpload={handleImageUpload}
+                          onFileStatusChange={handleImageStatusChange}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Manual URL Input (Optional) */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Or enter image URL manually
+                      </label>
+                      <input
+                        type="url"
+                        value={formData.image}
+                        onChange={(e) => setFormData({...formData, image: e.target.value})}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="https://example.com/image.jpg"
+                      />
+                    </div>
+
+                    {/* Image Preview */}
+                    {formData.image && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Preview
+                        </label>
+                        <img 
+                          src={formData.image} 
+                          alt="Preview"
+                          className="w-full h-32 object-cover rounded-lg"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Category
-                  </label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) => setFormData({...formData, category: e.target.value})}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="announcement">Announcement</option>
-                    <option value="update">Update</option>
-                    <option value="partnership">Partnership</option>
-                    <option value="achievement">Achievement</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Excerpt
-                  </label>
-                  <textarea
-                    value={formData.excerpt}
-                    onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    rows={3}
-                    required
-                  />
-                </div>
-
+                {/* Full Width Content */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Content
@@ -251,32 +334,24 @@ export default function NewsControl() {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Image Path
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.image}
-                    onChange={(e) => setFormData({...formData, image: e.target.value})}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="/assets/images/news/1.png"
-                  />
-                </div>
-
-                <div className="flex justify-end space-x-3 pt-4">
+                <div className="flex justify-end space-x-3 pt-4 border-t">
                   <button
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+                    className="px-6 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    disabled={hasUnuploadedImage || imageUploading}
+                    className={`px-6 py-2 rounded-lg font-medium ${
+                      hasUnuploadedImage || imageUploading
+                        ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                    }`}
                   >
-                    {editingNews ? 'Update' : 'Add'} News
+                    {imageUploading ? 'Uploading...' : editingNews ? 'Update News' : 'Add News'}
                   </button>
                 </div>
               </form>

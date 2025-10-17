@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { Partner } from '@/interfaces';
-
-
+import FileUploader from '@/components/FileUploader';
+import Image from 'next/image';
 
 export default function PartnersControl() {
   const [partners, setPartners] = useState<Partner[]>([]);
@@ -15,6 +15,9 @@ export default function PartnersControl() {
     brief: '',
     logo: ''
   });
+  // New states for file upload
+  const [logoUploading, setLogoUploading] = useState(false);
+  const [hasUnuploadedLogo, setHasUnuploadedLogo] = useState(false);
 
   useEffect(() => {
     fetchPartners();
@@ -30,6 +33,36 @@ export default function PartnersControl() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Handle logo upload from FileUploader
+  const handleLogoUpload = (uploadedLogoLink: string) => {
+    setFormData(prev => ({ ...prev, logo: uploadedLogoLink }));
+  };
+
+  // Handle upload status changes
+  const handleLogoStatusChange = (status: { hasUnuploadedFile: boolean; isUploading: boolean }) => {
+    setHasUnuploadedLogo(status.hasUnuploadedFile);
+    setLogoUploading(status.isUploading);
+  };
+
+  // Fix URL validation
+  const validateURL = (url: string): boolean => {
+    if (!url) return false;
+    try {
+      // Add protocol if missing
+      const urlToTest = url.startsWith('http') ? url : `https://${url}`;
+      new URL(urlToTest);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  // Format URL to ensure it has protocol
+  const formatURL = (url: string): string => {
+    if (!url) return '';
+    return url.startsWith('http') ? url : `https://${url}`;
   };
 
   const deletePartner = async (id: number) => {
@@ -57,7 +90,7 @@ export default function PartnersControl() {
       name: '',
       link: '',
       brief: '',
-      logo: '/assets/logos/default.png'
+      logo: ''
     });
     setShowModal(true);
   };
@@ -76,13 +109,36 @@ export default function PartnersControl() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Check if there's an unuploaded file
+    if (hasUnuploadedLogo) {
+      alert('Please upload the selected logo before submitting.');
+      return;
+    }
+
+    // Check if upload is in progress
+    if (logoUploading) {
+      alert('Please wait for the logo upload to complete.');
+      return;
+    }
+
+    // Validate and format URL
+    if (!validateURL(formData.link)) {
+      alert('Please enter a valid website URL (e.g., example.com or https://example.com)');
+      return;
+    }
+
+    const formattedData = {
+      ...formData,
+      link: formatURL(formData.link)
+    };
+    
     try {
       if (editingPartner) {
         // Update existing partner
         const response = await fetch('/api/partners', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...formData, id: editingPartner.id })
+          body: JSON.stringify({ ...formattedData, id: editingPartner.id })
         });
         
         if (response.ok) {
@@ -96,7 +152,7 @@ export default function PartnersControl() {
         const response = await fetch('/api/partners', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(formattedData)
         });
         
         if (response.ok) {
@@ -146,14 +202,17 @@ export default function PartnersControl() {
             {partners.map((partner) => (
               <div key={partner.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                 <div className="flex items-start space-x-4">
-                  <img 
-                    src={partner.logo} 
-                    alt={partner.name}
-                    className="w-16 h-16 object-contain"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/assets/logos/default.png';
-                    }}
-                  />
+                  <div className="w-16 h-16 relative flex-shrink-0">
+                    <Image
+                      src={partner.logo}
+                      alt={partner.name}
+                      fill
+                      className="object-contain"
+                      onError={() => {
+                        console.log(`Failed to load logo: ${partner.logo}`);
+                      }}
+                    />
+                  </div>
                   <div className="flex-1">
                     <h3 className="font-medium text-gray-900">{partner.name}</h3>
                     <a 
@@ -192,78 +251,131 @@ export default function PartnersControl() {
       {/* Modal for Add/Edit */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <h3 className="text-xl font-bold mb-4">
                 {editingPartner ? 'Edit Partner' : 'Add New Partner'}
               </h3>
               
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Partner Name
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Left Column - Partner Info */}
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Partner Name
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Website Link
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.link}
+                        onChange={(e) => setFormData({...formData, link: e.target.value})}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="example.com or https://example.com"
+                        required
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Enter website URL (with or without https://)
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Brief Description
+                      </label>
+                      <textarea
+                        value={formData.brief}
+                        onChange={(e) => setFormData({...formData, brief: e.target.value})}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={4}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Right Column - Logo Upload */}
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Partner Logo
+                      </label>
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
+                        <FileUploader
+                          onFileUpload={handleLogoUpload}
+                          onFileStatusChange={handleLogoStatusChange}
+                        />
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Upload a logo image (PNG, JPG, or SVG recommended)
+                      </p>
+                    </div>
+
+                    {/* Manual URL Input (Optional) */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Or enter logo URL manually
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.logo}
+                        onChange={(e) => setFormData({...formData, logo: e.target.value})}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="https://example.com/logo.png"
+                      />
+                    </div>
+
+                    {/* Logo Preview */}
+                    {formData.logo && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Preview
+                        </label>
+                        <div className="w-32 h-32 relative border rounded-lg p-2 bg-white">
+                          <Image
+                            src={formData.logo}
+                            alt="Logo Preview"
+                            fill
+                            className="object-contain"
+                            onError={(e) => {
+                              console.log('Failed to load preview image');
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Website Link
-                  </label>
-                  <input
-                    type="url"
-                    value={formData.link}
-                    onChange={(e) => setFormData({...formData, link: e.target.value})}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Logo Path
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.logo}
-                    onChange={(e) => setFormData({...formData, logo: e.target.value})}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="/assets/logos/partner-logo.png"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Brief Description
-                  </label>
-                  <textarea
-                    value={formData.brief}
-                    onChange={(e) => setFormData({...formData, brief: e.target.value})}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    rows={4}
-                    required
-                  />
-                </div>
-
-                <div className="flex justify-end space-x-3 pt-4">
+                <div className="flex justify-end space-x-3 pt-4 border-t">
                   <button
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+                    className="px-6 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    disabled={hasUnuploadedLogo || logoUploading}
+                    className={`px-6 py-2 rounded-lg font-medium ${
+                      hasUnuploadedLogo || logoUploading
+                        ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                    }`}
                   >
-                    {editingPartner ? 'Update' : 'Add'} Partner
+                    {logoUploading ? 'Uploading...' : editingPartner ? 'Update Partner' : 'Add Partner'}
                   </button>
                 </div>
               </form>
