@@ -348,7 +348,7 @@ export default function PartnersControl() {
                             alt="Logo Preview"
                             fill
                             className="object-contain"
-                            onError={(e) => {
+                            onError={() => {
                               console.log('Failed to load preview image');
                             }}
                           />

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import FileUploader from '@/components/FileUploader';
+import Image from 'next/image';
 
 interface NewsItem {
   id: number;
@@ -110,7 +111,6 @@ export default function NewsControl() {
 
     try {
       if (editingNews) {
-        // Update existing news
         const response = await fetch('/api/news', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -124,7 +124,6 @@ export default function NewsControl() {
           alert('Failed to update news item');
         }
       } else {
-        // Add new news
         const response = await fetch('/api/news', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -156,7 +155,6 @@ export default function NewsControl() {
 
   return (
     <>
-      {/* News Management */}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">News Management ({newsItems.length} items)</h2>
@@ -180,11 +178,14 @@ export default function NewsControl() {
                 <div className="flex justify-between items-start">
                   <div className="flex space-x-4">
                     {item.image && (
-                      <img 
-                        src={item.image} 
-                        alt={item.title}
-                        className="w-20 h-20 object-cover rounded"
-                      />
+                      <div className="w-20 h-20 relative flex-shrink-0">
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          fill
+                          className="object-cover rounded"
+                        />
+                      </div>
                     )}
                     <div className="flex-1">
                       <h3 className="font-medium text-gray-900 text-lg">{item.title}</h3>
@@ -217,7 +218,6 @@ export default function NewsControl() {
         )}
       </div>
 
-      {/* Modal for Add/Edit */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
@@ -228,7 +228,6 @@ export default function NewsControl() {
               
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Left Column */}
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -273,7 +272,6 @@ export default function NewsControl() {
                     </div>
                   </div>
 
-                  {/* Right Column - Image Upload */}
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -287,7 +285,6 @@ export default function NewsControl() {
                       </div>
                     </div>
 
-                    {/* Manual URL Input (Optional) */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Or enter image URL manually
@@ -301,26 +298,27 @@ export default function NewsControl() {
                       />
                     </div>
 
-                    {/* Image Preview */}
                     {formData.image && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           Preview
                         </label>
-                        <img 
-                          src={formData.image} 
-                          alt="Preview"
-                          className="w-full h-32 object-cover rounded-lg"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = 'none';
-                          }}
-                        />
+                        <div className="w-full h-32 relative">
+                          <Image
+                            src={formData.image}
+                            alt="Preview"
+                            fill
+                            className="object-cover rounded-lg"
+                            onError={() => {
+                              console.log('Failed to load preview image');
+                            }}
+                          />
+                        </div>
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* Full Width Content */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Content
